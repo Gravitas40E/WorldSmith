@@ -1,0 +1,18 @@
+[package]
+name = "worldsmith-models"
+description = "Pure data structures for all simulation state"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true }
+worldsmith-math = { path = "../worldsmith-math" }
+worldsmith-units = { path = "../worldsmith-units" }
+
+[dev-dependencies]

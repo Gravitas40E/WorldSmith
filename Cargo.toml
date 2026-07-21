@@ -1,0 +1,47 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/worldsmith-math",
+    "crates/worldsmith-units",
+    "crates/worldsmith-rng",
+    "crates/worldsmith-grid",
+    "crates/worldsmith-traits",
+    "crates/worldsmith-models",
+    "crates/worldsmith-presets",
+    "crates/worldsmith-serialization",
+    "crates/worldsmith-chemistry",
+    "crates/worldsmith-stellar",
+    "crates/worldsmith-planet",
+    "crates/worldsmith-geology",
+    "crates/worldsmith-atmosphere",
+    "crates/worldsmith-climate",
+    "crates/worldsmith-engine",
+    "crates/worldsmith-state",
+    "crates/worldsmith-visualization",
+    "crates/worldsmith-render",
+    "crates/worldsmith-ui",
+    "crates/worldsmith-io",
+    "crates/worldsmith-export",
+    "crates/worldsmith-cli",
+    "crates/worldsmith-app",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/worldsmith/worldsmith"
+rust-version = "1.75"
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+rand = "0.8"
+rand_chacha = "0.3"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[profile.bench]
+inherits = "release"

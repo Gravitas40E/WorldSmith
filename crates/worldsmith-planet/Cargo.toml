@@ -1,0 +1,24 @@
+[package]
+name = "worldsmith-planet"
+description = "Orbital mechanics, bulk properties, differentiation"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+worldsmith-math = { path = "../worldsmith-math" }
+worldsmith-models = { path = "../worldsmith-models" }
+worldsmith-rng = { path = "../worldsmith-rng" }
+worldsmith-state = { path = "../worldsmith-state" }
+worldsmith-stellar = { path = "../worldsmith-stellar" }
+worldsmith-traits = { path = "../worldsmith-traits" }
+
+[dev-dependencies]
+worldsmith-engine = { path = "../worldsmith-engine" }

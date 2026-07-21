@@ -1,0 +1,22 @@
+[package]
+name = "worldsmith-stellar"
+description = "Star formation, evolution, and spectrum"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+worldsmith-math = { path = "../worldsmith-math" }
+worldsmith-models = { path = "../worldsmith-models" }
+worldsmith-state = { path = "../worldsmith-state" }
+worldsmith-traits = { path = "../worldsmith-traits" }
+
+[dev-dependencies]
+worldsmith-engine = { path = "../worldsmith-engine" }

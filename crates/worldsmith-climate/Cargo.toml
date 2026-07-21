@@ -1,0 +1,13 @@
+[package]
+name = "worldsmith-climate"
+description = "Radiative balance, circulation, surface climate"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
