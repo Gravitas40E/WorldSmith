@@ -8,7 +8,7 @@
 use serde::{Deserialize, Serialize};
 use worldsmith_math::constants;
 use worldsmith_models::{
-    AtmosphericGas, AtmosphericLayer, AtmosphericProperties, AtmosphereType, ClimateType,
+    AtmosphereType, AtmosphericGas, AtmosphericLayer, AtmosphericProperties, ClimateType,
     MeasuredValue, Molecule, Planet, WeatherType,
 };
 
@@ -80,7 +80,12 @@ pub fn evolve_planet(
     validate_planet_for_evolution(mass, radius, orbital_au)?;
 
     // Step 2: Interior differentiation
-    let density = planet.physical.density_kg_m3.as_ref().map(|v| v.value).unwrap_or(5_000.0);
+    let density = planet
+        .physical
+        .density_kg_m3
+        .as_ref()
+        .map(|v| v.value)
+        .unwrap_or(5_000.0);
     let metal_fraction = if density > 5_000.0 { 0.34 } else { 0.22 };
     let water_fraction = match planet.planet_type {
         worldsmith_models::PlanetType::Ocean => 0.08,
@@ -100,12 +105,21 @@ pub fn evolve_planet(
 
     // Step 3: Atmosphere generation
     let atmosphere = derive_atmosphere(&planet, &interior.heat_budget, water_fraction);
-    let pressure = atmosphere.pressure_pa.as_ref().map(|v| v.value).unwrap_or(0.0);
+    let pressure = atmosphere
+        .pressure_pa
+        .as_ref()
+        .map(|v| v.value)
+        .unwrap_or(0.0);
     planet.atmosphere = Some(atmosphere);
 
     // Step 4: Climate feedback
     let climate_feedback = compute_climate_feedback(&planet, stellar_luminosity_solar, age_gyr)?;
-    let surface_temperature_k = climate_feedback.climate.average_temperature_k.as_ref().map(|v| v.value).unwrap_or(278.0);
+    let surface_temperature_k = climate_feedback
+        .climate
+        .average_temperature_k
+        .as_ref()
+        .map(|v| v.value)
+        .unwrap_or(278.0);
     let runaway_risk = climate_feedback.runaway_risk;
     let ice_albedo_instability = climate_feedback.ice_albedo_instability;
     planet.climate = Some(climate_feedback.climate);
@@ -119,7 +133,11 @@ pub fn evolve_planet(
             pressure,
             rotation_period_s,
             has_ocean,
-            climate.ice_coverage.as_ref().map(|v| v.value).unwrap_or(0.0),
+            climate
+                .ice_coverage
+                .as_ref()
+                .map(|v| v.value)
+                .unwrap_or(0.0),
         )?;
         climate.wind = Some(weather.wind);
         if weather.weather_type != WeatherType::Calm {
@@ -131,7 +149,8 @@ pub fn evolve_planet(
     planet.ocean = derive_ocean_properties(surface_temperature_k, pressure, water_fraction);
 
     // Step 7: Geological evolution (post-climate feedback)
-    let geological_evolution = compute_geological_evolution(&planet, &interior, surface_temperature_k)?;
+    let geological_evolution =
+        compute_geological_evolution(&planet, &interior, surface_temperature_k)?;
     let active_plate_tectonics = geological_evolution.active_plate_tectonics;
     planet.geology = Some(geological_evolution.geology);
 
@@ -148,10 +167,18 @@ pub fn evolve_planet(
     );
     timeline.sort_by(|a, b| a.time_myr.total_cmp(&b.time_myr));
 
-    Ok(PlanetEvolutionOutput { planet, interior, timeline })
+    Ok(PlanetEvolutionOutput {
+        planet,
+        interior,
+        timeline,
+    })
 }
 
-fn derive_atmosphere(planet: &Planet, heat: &HeatBudget, water_fraction: f64) -> AtmosphericProperties {
+fn derive_atmosphere(
+    planet: &Planet,
+    heat: &HeatBudget,
+    water_fraction: f64,
+) -> AtmosphericProperties {
     let escape_velocity = (2.0 * constants::GRAVITATIONAL_CONSTANT * planet.physical.mass_kg.value
         / planet.physical.radius_m.value)
         .sqrt();
@@ -163,11 +190,17 @@ fn derive_atmosphere(planet: &Planet, heat: &HeatBudget, water_fraction: f64) ->
     let density = pressure / (287.0 * 288.0);
     let scale_height = constants::GAS_CONSTANT * 288.0
         / (planet.physical.mass_kg.value * constants::GRAVITATIONAL_CONSTANT
-            / planet.physical.radius_m.value.powi(2) * 0.02896);
+            / planet.physical.radius_m.value.powi(2)
+            * 0.02896);
 
     let mut gases = vec![
         gas("N2", "Nitrogen", 0.70, false),
-        gas("CO2", "Carbon dioxide", (0.02 + outgassing * 0.05).clamp(0.01, 0.30), true),
+        gas(
+            "CO2",
+            "Carbon dioxide",
+            (0.02 + outgassing * 0.05).clamp(0.01, 0.30),
+            true,
+        ),
     ];
     if water_fraction > 0.002 {
         gases.push(gas("H2O", "Water vapour", 0.02, true));
@@ -191,13 +224,25 @@ fn derive_atmosphere(planet: &Planet, heat: &HeatBudget, water_fraction: f64) ->
 
     AtmosphericProperties {
         atmosphere_type,
-        pressure_pa: Some(measured(pressure, "Pa", "outgassing-retention pressure model")),
+        pressure_pa: Some(measured(
+            pressure,
+            "Pa",
+            "outgassing-retention pressure model",
+        )),
         density_kg_m3: Some(measured(density, "kg m^-3", "ideal gas density proxy")),
-        scale_height_m: Some(measured(scale_height.max(100.0), "m", "scale-height from gas constant and gravity")),
+        scale_height_m: Some(measured(
+            scale_height.max(100.0),
+            "m",
+            "scale-height from gas constant and gravity",
+        )),
         layers: vec![AtmosphericLayer {
             name: "Troposphere".to_string(),
             base_altitude_m: measured(0.0, "m", "surface layer base"),
-            top_altitude_m: measured(scale_height.max(100.0) * 1.5, "m", "top at 1.5 scale heights"),
+            top_altitude_m: measured(
+                scale_height.max(100.0) * 1.5,
+                "m",
+                "top at 1.5 scale heights",
+            ),
             temperature_k: None,
         }],
         composition: gases.clone(),
@@ -223,34 +268,81 @@ fn build_timeline(
     ];
 
     if interior.has_liquid_outer_core {
-        timeline.push(entry(150.0, "Magnetic field stabilizes", "Liquid conducting core and heat flow support a dynamo."));
+        timeline.push(entry(
+            150.0,
+            "Magnetic field stabilizes",
+            "Liquid conducting core and heat flow support a dynamo.",
+        ));
     }
 
-    let volcanism = planet.geology.as_ref().map(|g| g.volcanism).unwrap_or(worldsmith_models::VolcanicActivity::None);
+    let volcanism = planet
+        .geology
+        .as_ref()
+        .map(|g| g.volcanism)
+        .unwrap_or(worldsmith_models::VolcanicActivity::None);
     if volcanism != worldsmith_models::VolcanicActivity::None {
-        timeline.push(entry(80.0, "Volcanism begins", "Internal heat drives mantle melting and volatile outgassing."));
-        timeline.push(entry(400.0, "Atmosphere thickens", "Outgassing supplies secondary atmospheric gases including CO2 and H2O."));
+        timeline.push(entry(
+            80.0,
+            "Volcanism begins",
+            "Internal heat drives mantle melting and volatile outgassing.",
+        ));
+        timeline.push(entry(
+            400.0,
+            "Atmosphere thickens",
+            "Outgassing supplies secondary atmospheric gases including CO2 and H2O.",
+        ));
     }
 
     if planet.ocean.is_some() {
-        timeline.push(entry(700.0, "Oceans condense", "Temperature and pressure permit stable water reservoirs."));
+        timeline.push(entry(
+            700.0,
+            "Oceans condense",
+            "Temperature and pressure permit stable water reservoirs.",
+        ));
     }
 
     if active_plate_tectonics {
-        timeline.push(entry(500.0, "Plate tectonics established", "Mantle convection and water lubrication drive plate subduction and crustal recycling."));
-        timeline.push(entry(900.0, "Carbon-silicate cycle active", "Tectonic cycling regulates atmospheric CO2 through subduction and volcanism."));
+        timeline.push(entry(
+            500.0,
+            "Plate tectonics established",
+            "Mantle convection and water lubrication drive plate subduction and crustal recycling.",
+        ));
+        timeline.push(entry(
+            900.0,
+            "Carbon-silicate cycle active",
+            "Tectonic cycling regulates atmospheric CO2 through subduction and volcanism.",
+        ));
     }
 
-    if planet.climate.as_ref().map(|c| c.climate_type == ClimateType::Temperate || c.climate_type == ClimateType::Tropical).unwrap_or(false) {
-        timeline.push(entry(1_200.0, "Stable climate established", "Surface water, atmosphere, and magnetic shielding remain jointly favorable."));
+    if planet
+        .climate
+        .as_ref()
+        .map(|c| {
+            c.climate_type == ClimateType::Temperate || c.climate_type == ClimateType::Tropical
+        })
+        .unwrap_or(false)
+    {
+        timeline.push(entry(
+            1_200.0,
+            "Stable climate established",
+            "Surface water, atmosphere, and magnetic shielding remain jointly favorable.",
+        ));
     }
 
     if runaway_risk > 0.5 {
-        timeline.push(entry(1_500.0, "Runaway greenhouse risk", "High surface temperature and greenhouse gas concentrations threaten thermal runaway."));
+        timeline.push(entry(
+            1_500.0,
+            "Runaway greenhouse risk",
+            "High surface temperature and greenhouse gas concentrations threaten thermal runaway.",
+        ));
     }
 
     if ice_albedo_instability {
-        timeline.push(entry(1_000.0, "Ice-albedo feedback active", "Expanding ice coverage reduces absorbed insolation, driving further cooling."));
+        timeline.push(entry(
+            1_000.0,
+            "Ice-albedo feedback active",
+            "Expanding ice coverage reduces absorbed insolation, driving further cooling.",
+        ));
     }
 
     timeline
@@ -263,7 +355,11 @@ fn gas(formula: &str, name: &str, abundance: f64, is_greenhouse: bool) -> Atmosp
             name: name.to_string(),
             molar_mass_kg_mol: None,
         },
-        abundance: measured(abundance, "mole fraction", "outgassing and retention composition proxy"),
+        abundance: measured(
+            abundance,
+            "mole fraction",
+            "outgassing and retention composition proxy",
+        ),
         is_greenhouse,
     }
 }
@@ -285,7 +381,9 @@ fn measured(value: f64, unit: &str, equation: &str) -> MeasuredValue {
             input_variables: Vec::new(),
             confidence: Some(0.58),
             notes: vec!["WorldSmith simplified planetary evolution model".to_string()],
-            references: vec!["Radiative equilibrium and parameterized terrestrial evolution".to_string()],
+            references: vec![
+                "Radiative equilibrium and parameterized terrestrial evolution".to_string(),
+            ],
         }),
     }
 }
@@ -293,8 +391,8 @@ fn measured(value: f64, unit: &str, equation: &str) -> MeasuredValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use worldsmith_models::*;
     use worldsmith_math::constants;
+    use worldsmith_models::*;
 
     fn test_planet() -> Planet {
         Planet {
@@ -304,19 +402,43 @@ mod tests {
             planet_type: PlanetType::Rocky,
             system_id: SystemId(1),
             physical: PhysicalProperties {
-                mass_kg: MeasuredValue { value: constants::EARTH_MASS, unit: "kg".to_string(), provenance: None },
-                radius_m: MeasuredValue { value: constants::EARTH_RADIUS, unit: "m".to_string(), provenance: None },
+                mass_kg: MeasuredValue {
+                    value: constants::EARTH_MASS,
+                    unit: "kg".to_string(),
+                    provenance: None,
+                },
+                radius_m: MeasuredValue {
+                    value: constants::EARTH_RADIUS,
+                    unit: "m".to_string(),
+                    provenance: None,
+                },
                 density_kg_m3: Some(measured(5_514.0, "kg m^-3", "Earth density")),
                 surface_gravity_m_s2: None,
             },
             orbit: OrbitalProperties {
                 parent: BodyReference::Star(StarId(1)),
-                semi_major_axis_m: MeasuredValue { value: constants::ASTRONOMICAL_UNIT, unit: "m".to_string(), provenance: None },
+                semi_major_axis_m: MeasuredValue {
+                    value: constants::ASTRONOMICAL_UNIT,
+                    unit: "m".to_string(),
+                    provenance: None,
+                },
                 semi_minor_axis_m: None,
-                eccentricity: MeasuredValue { value: 0.02, unit: "dimensionless".to_string(), provenance: None },
-                inclination_rad: MeasuredValue { value: 0.0, unit: "rad".to_string(), provenance: None },
+                eccentricity: MeasuredValue {
+                    value: 0.02,
+                    unit: "dimensionless".to_string(),
+                    provenance: None,
+                },
+                inclination_rad: MeasuredValue {
+                    value: 0.0,
+                    unit: "rad".to_string(),
+                    provenance: None,
+                },
                 orbital_period_s: None,
-                rotation_period_s: Some(MeasuredValue { value: 86_400.0, unit: "s".to_string(), provenance: None }),
+                rotation_period_s: Some(MeasuredValue {
+                    value: 86_400.0,
+                    unit: "s".to_string(),
+                    provenance: None,
+                }),
                 axial_tilt_rad: None,
             },
             geology: None,
@@ -354,7 +476,10 @@ mod tests {
         let output = evolve_planet(planet, 1.0, 4.5).unwrap();
         assert!(!output.timeline.is_empty());
         assert!(output.timeline.iter().any(|e| e.event == "Planet forms"));
-        assert!(output.timeline.iter().any(|e| e.event == "Core differentiates"));
+        assert!(output
+            .timeline
+            .iter()
+            .any(|e| e.event == "Core differentiates"));
     }
 
     #[test]
@@ -399,7 +524,10 @@ mod tests {
         let output = evolve_planet(planet, 1.0, 4.5).unwrap();
         assert!(output.planet.ocean.is_some());
         let atmosphere = output.planet.atmosphere.as_ref().unwrap();
-        assert!(atmosphere.composition.iter().any(|g| g.molecule.formula == "H2O"));
+        assert!(atmosphere
+            .composition
+            .iter()
+            .any(|g| g.molecule.formula == "H2O"));
     }
 
     #[test]

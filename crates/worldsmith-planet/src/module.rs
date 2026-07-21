@@ -3,8 +3,12 @@
 use serde::{Deserialize, Serialize};
 use worldsmith_math::constants;
 use worldsmith_models::StarId;
-use worldsmith_state::{EventId, EventPayload, EventSource, EventTarget, FieldKey, SimulationEvent};
-use worldsmith_traits::{ContractError, ContractResult, ModuleContext, SimulationModule, SnapshotProducer, StateWriter};
+use worldsmith_state::{
+    EventId, EventPayload, EventSource, EventTarget, FieldKey, SimulationEvent,
+};
+use worldsmith_traits::{
+    ContractError, ContractResult, ModuleContext, SimulationModule, SnapshotProducer, StateWriter,
+};
 
 use crate::{
     builder::{FormationConfig, PlanetFormationBuilder, PlanetFormationOutput},
@@ -44,7 +48,12 @@ pub struct PlanetFormationModule {
 impl PlanetFormationModule {
     /// Creates a planet formation module.
     pub fn new(config: PlanetFormationModuleConfig) -> Self {
-        Self { config, output: None, pending_events: Vec::new(), initialized: false }
+        Self {
+            config,
+            output: None,
+            pending_events: Vec::new(),
+            initialized: false,
+        }
     }
 
     /// Returns the most recent formation output.
@@ -59,7 +68,12 @@ impl PlanetFormationModule {
             .world()
             .stars
             .get(&self.config.parent_star_id)
-            .ok_or_else(|| ContractError::InvalidInput(format!("missing parent star {:?}", self.config.parent_star_id)))?;
+            .ok_or_else(|| {
+                ContractError::InvalidInput(format!(
+                    "missing parent star {:?}",
+                    self.config.parent_star_id
+                ))
+            })?;
         let stellar_mass_solar = star.mass_kg.value / constants::SOLAR_MASS;
         let luminosity_solar = star.luminosity_w.value / constants::SOLAR_LUMINOSITY;
         let disk = ProtoplanetaryDisk::from_star(
@@ -78,13 +92,14 @@ impl PlanetFormationModule {
 
     fn queue_payloads(&mut self, timestamp_s: f64, payloads: &[EventPayload]) {
         let module_id = self.id().to_string();
-        self.pending_events.extend(payloads.iter().cloned().map(|payload| SimulationEvent {
-            id: EventId(0),
-            timestamp_s,
-            source: EventSource::Module(module_id.clone()),
-            target: EventTarget::Global,
-            payload,
-        }));
+        self.pending_events
+            .extend(payloads.iter().cloned().map(|payload| SimulationEvent {
+                id: EventId(0),
+                timestamp_s,
+                source: EventSource::Module(module_id.clone()),
+                target: EventTarget::Global,
+                payload,
+            }));
     }
 }
 
@@ -114,7 +129,11 @@ impl SimulationModule for PlanetFormationModule {
         Ok(())
     }
 
-    fn update(&mut self, _context: ModuleContext, _state: &mut dyn StateWriter) -> ContractResult<()> {
+    fn update(
+        &mut self,
+        _context: ModuleContext,
+        _state: &mut dyn StateWriter,
+    ) -> ContractResult<()> {
         Ok(())
     }
 
@@ -170,7 +189,10 @@ pub struct PlanetEvolutionModuleConfig {
 
 impl Default for PlanetEvolutionModuleConfig {
     fn default() -> Self {
-        Self { fallback_luminosity_solar: 1.0, age_gyr: 4.5 }
+        Self {
+            fallback_luminosity_solar: 1.0,
+            age_gyr: 4.5,
+        }
     }
 }
 
@@ -185,7 +207,12 @@ pub struct PlanetEvolutionModule {
 impl PlanetEvolutionModule {
     /// Creates a planet evolution module.
     pub fn new(config: PlanetEvolutionModuleConfig) -> Self {
-        Self { config, outputs: Vec::new(), pending_events: Vec::new(), initialized: false }
+        Self {
+            config,
+            outputs: Vec::new(),
+            pending_events: Vec::new(),
+            initialized: false,
+        }
     }
 
     /// Returns latest evolution outputs.
@@ -215,7 +242,13 @@ impl PlanetEvolutionModule {
         if output.planet.magnetic_field.is_some() {
             payloads.push(EventPayload::MagneticFieldGenerated { planet_id });
         }
-        if output.planet.geology.as_ref().map(|g| g.volcanism != worldsmith_models::VolcanicActivity::None).unwrap_or(false) {
+        if output
+            .planet
+            .geology
+            .as_ref()
+            .map(|g| g.volcanism != worldsmith_models::VolcanicActivity::None)
+            .unwrap_or(false)
+        {
             payloads.push(EventPayload::VolcanismStarted { planet_id });
         }
         if output.planet.atmosphere.is_some() {
@@ -224,13 +257,14 @@ impl PlanetEvolutionModule {
         if output.planet.ocean.is_some() {
             payloads.push(EventPayload::OceanFormed { planet_id });
         }
-        self.pending_events.extend(payloads.into_iter().map(|payload| SimulationEvent {
-            id: EventId(0),
-            timestamp_s,
-            source: EventSource::Module(module_id.clone()),
-            target: EventTarget::Planet(planet_id),
-            payload,
-        }));
+        self.pending_events
+            .extend(payloads.into_iter().map(|payload| SimulationEvent {
+                id: EventId(0),
+                timestamp_s,
+                source: EventSource::Module(module_id.clone()),
+                target: EventTarget::Planet(planet_id),
+                payload,
+            }));
     }
 }
 
@@ -256,7 +290,10 @@ impl SimulationModule for PlanetEvolutionModule {
         for planet in planets {
             let output = evolve_planet(planet, luminosity, self.config.age_gyr)
                 .map_err(|err| ContractError::InvalidInput(err.to_string()))?;
-            state.world_mut().planets.insert(output.planet.id, output.planet.clone());
+            state
+                .world_mut()
+                .planets
+                .insert(output.planet.id, output.planet.clone());
             self.queue_evolution_events(state.world().clock.elapsed_seconds(), &output);
             self.outputs.push(output);
         }
@@ -264,7 +301,11 @@ impl SimulationModule for PlanetEvolutionModule {
         Ok(())
     }
 
-    fn update(&mut self, _context: ModuleContext, _state: &mut dyn StateWriter) -> ContractResult<()> {
+    fn update(
+        &mut self,
+        _context: ModuleContext,
+        _state: &mut dyn StateWriter,
+    ) -> ContractResult<()> {
         Ok(())
     }
 
@@ -274,7 +315,11 @@ impl SimulationModule for PlanetEvolutionModule {
     }
 
     fn reads(&self) -> Vec<FieldKey> {
-        vec![FieldKey::PlanetMass, FieldKey::OrbitalElements, FieldKey::StellarLuminosity]
+        vec![
+            FieldKey::PlanetMass,
+            FieldKey::OrbitalElements,
+            FieldKey::StellarLuminosity,
+        ]
     }
 
     fn writes(&self) -> Vec<FieldKey> {

@@ -12,8 +12,7 @@
 
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
-    ClimateProperties, ClimateType, MeasuredValue, Planet, Season, TemperatureBand,
-    WindProperties,
+    ClimateProperties, ClimateType, MeasuredValue, Planet, Season, TemperatureBand, WindProperties,
 };
 
 use crate::errors::{PlanetFormationError, PlanetFormationResult};
@@ -52,7 +51,8 @@ pub fn compute_climate_feedback(
     stellar_luminosity_solar: f64,
     age_gyr: f64,
 ) -> PlanetFormationResult<ClimateFeedback> {
-    let orbital_au = planet.orbit.semi_major_axis_m.value / worldsmith_math::constants::ASTRONOMICAL_UNIT;
+    let orbital_au =
+        planet.orbit.semi_major_axis_m.value / worldsmith_math::constants::ASTRONOMICAL_UNIT;
     if orbital_au <= 0.0 {
         return Err(PlanetFormationError::InvalidEvolution(
             "orbital distance must be positive for climate calculation".to_string(),
@@ -86,7 +86,8 @@ pub fn compute_climate_feedback(
     let ice_albedo_instability = ice_coverage > 0.3 && surface_temperature_k < 280.0;
 
     // Runaway greenhouse risk
-    let runaway_risk = compute_runaway_risk(surface_temperature_k, pressure_pa, greenhouse_gas_fraction);
+    let runaway_risk =
+        compute_runaway_risk(surface_temperature_k, pressure_pa, greenhouse_gas_fraction);
 
     // Humidity from ocean availability and temperature
     let has_ocean = planet.ocean.is_some();
@@ -152,12 +153,24 @@ pub fn compute_climate_feedback(
             prevailing_direction: weather.wind.prevailing_direction,
             weather_type: weather.weather_type,
         }),
-        humidity: Some(measured(humidity, "fraction", "ocean-temperature humidity scaling")),
-        ice_coverage: Some(measured(ice_coverage, "fraction", "temperature ice stability with albedo hysteresis")),
+        humidity: Some(measured(
+            humidity,
+            "fraction",
+            "ocean-temperature humidity scaling",
+        )),
+        ice_coverage: Some(measured(
+            ice_coverage,
+            "fraction",
+            "temperature ice stability with albedo hysteresis",
+        )),
         seasons: vec![Season {
             name: "Annual mean".to_string(),
             duration_s: measured(31_557_600.0, "s", "Julian year"),
-            average_temperature_k: Some(measured(surface_temperature_k, "K", "annual mean surface temperature")),
+            average_temperature_k: Some(measured(
+                surface_temperature_k,
+                "K",
+                "annual mean surface temperature",
+            )),
         }],
     };
 
@@ -191,7 +204,11 @@ fn compute_ice_coverage(surface_temperature_k: f64, _pressure_pa: f64) -> f64 {
     .clamp(0.0, 1.0)
 }
 
-fn compute_runaway_risk(surface_temperature_k: f64, _pressure_pa: f64, _greenhouse_fraction: f64) -> f64 {
+fn compute_runaway_risk(
+    surface_temperature_k: f64,
+    _pressure_pa: f64,
+    _greenhouse_fraction: f64,
+) -> f64 {
     // Risk of runaway greenhouse based on surface temperature
     if surface_temperature_k > 350.0 {
         1.0
@@ -253,8 +270,8 @@ fn measured(value: f64, unit: &str, equation: &str) -> MeasuredValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use worldsmith_models::*;
     use worldsmith_math::constants;
+    use worldsmith_models::*;
 
     fn test_planet() -> Planet {
         Planet {
@@ -292,17 +309,15 @@ mod tests {
                 layers: Vec::new(),
                 composition: Vec::new(),
                 cloud_coverage: None,
-                greenhouse_gases: vec![
-                    AtmosphericGas {
-                        molecule: Molecule {
-                            formula: "CO2".to_string(),
-                            name: "Carbon dioxide".to_string(),
-                            molar_mass_kg_mol: None,
-                        },
-                        abundance: measured_val(0.0004),
-                        is_greenhouse: true,
+                greenhouse_gases: vec![AtmosphericGas {
+                    molecule: Molecule {
+                        formula: "CO2".to_string(),
+                        name: "Carbon dioxide".to_string(),
+                        molar_mass_kg_mol: None,
                     },
-                ],
+                    abundance: measured_val(0.0004),
+                    is_greenhouse: true,
+                }],
             }),
             climate: None,
             ocean: Some(OceanProperties {
@@ -332,7 +347,12 @@ mod tests {
         planet.orbit.semi_major_axis_m = measured_val(1.2 * constants::ASTRONOMICAL_UNIT);
         let feedback = compute_climate_feedback(&planet, 1.0, 4.5).unwrap();
         assert_eq!(feedback.climate.climate_type, ClimateType::Temperate);
-        let temp = feedback.climate.average_temperature_k.as_ref().map(|v| v.value).unwrap_or(0.0);
+        let temp = feedback
+            .climate
+            .average_temperature_k
+            .as_ref()
+            .map(|v| v.value)
+            .unwrap_or(0.0);
         assert!(temp > 250.0, "temperature should be > 250 K");
         assert!(temp < 320.0, "temperature should be < 320 K");
     }
@@ -366,9 +386,22 @@ mod tests {
         let planet = test_planet();
         let young = compute_climate_feedback(&planet, 1.0, 0.5).unwrap();
         let old = compute_climate_feedback(&planet, 1.0, 10.0).unwrap();
-        let young_temp = young.climate.average_temperature_k.as_ref().map(|v| v.value).unwrap_or(0.0);
-        let old_temp = old.climate.average_temperature_k.as_ref().map(|v| v.value).unwrap_or(0.0);
-        assert!(young_temp <= old_temp, "older star should produce warmer planet");
+        let young_temp = young
+            .climate
+            .average_temperature_k
+            .as_ref()
+            .map(|v| v.value)
+            .unwrap_or(0.0);
+        let old_temp = old
+            .climate
+            .average_temperature_k
+            .as_ref()
+            .map(|v| v.value)
+            .unwrap_or(0.0);
+        assert!(
+            young_temp <= old_temp,
+            "older star should produce warmer planet"
+        );
     }
 
     #[test]
@@ -383,7 +416,12 @@ mod tests {
         let mut planet = test_planet();
         planet.orbit.semi_major_axis_m = measured_val(1.5 * constants::ASTRONOMICAL_UNIT);
         let feedback = compute_climate_feedback(&planet, 1.0, 4.5).unwrap();
-        let ice = feedback.climate.ice_coverage.as_ref().map(|v| v.value).unwrap_or(0.0);
+        let ice = feedback
+            .climate
+            .ice_coverage
+            .as_ref()
+            .map(|v| v.value)
+            .unwrap_or(0.0);
         assert!(ice > 0.2, "cold planet should have ice coverage > 0.2");
     }
 
@@ -391,7 +429,12 @@ mod tests {
     fn greenhouse_warming_scales_with_greenhouse_gases() {
         let planet = test_planet();
         let feedback = compute_climate_feedback(&planet, 1.0, 4.5).unwrap();
-        let temp = feedback.climate.average_temperature_k.as_ref().map(|v| v.value).unwrap_or(0.0);
+        let temp = feedback
+            .climate
+            .average_temperature_k
+            .as_ref()
+            .map(|v| v.value)
+            .unwrap_or(0.0);
         assert!(temp > 250.0 && temp < 350.0);
     }
 }

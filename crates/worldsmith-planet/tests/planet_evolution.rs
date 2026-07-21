@@ -306,7 +306,11 @@ fn ocean_planet_has_water_cycle() {
     assert!(
         climate.climate_type == ClimateType::Temperate
             || climate.climate_type == ClimateType::Tropical
-            || climate.average_temperature_k.as_ref().map(|t| t.value > 260.0).unwrap_or(false),
+            || climate
+                .average_temperature_k
+                .as_ref()
+                .map(|t| t.value > 260.0)
+                .unwrap_or(false),
         "ocean planet should have livable temperatures"
     );
 

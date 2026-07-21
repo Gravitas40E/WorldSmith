@@ -77,7 +77,6 @@ pub struct DebugSettings {
     pub deterministic_assertions: bool,
 }
 
-
 impl Default for EngineSettings {
     fn default() -> Self {
         Self {
