@@ -97,6 +97,7 @@ impl SurfaceChemistryModule {
         }
     }
 
+    #[allow(clippy::field_reassign_with_default)]
     fn initialize_reservoirs(&self, planet: &Planet) -> SurfaceChemistryState {
         let mut state = SurfaceChemistryState::default();
         state.silicate_mass_kg = DEFAULT_SILICATE_MASS_KG;
@@ -251,7 +252,7 @@ impl SimulationModule for SurfaceChemistryModule {
             .collect();
 
         for (_planet_id, planet, chem) in snapshot {
-            let chem = match chem {
+            let _chem = match chem {
                 Some(chem) => chem,
                 None => continue,
             };
@@ -339,7 +340,7 @@ mod tests {
     use worldsmith_engine::EngineBuilder;
     use worldsmith_math::Vector3;
     use worldsmith_models::{
-        AtmosphericGas, AtmosphericProperties, BiosphereState, CarbonCycleState, CryosphereState,
+        AtmosphericGas, AtmosphericProperties, AtmosphereState, BiosphereState, CarbonCycleState, CryosphereState, HabitabilityState, PlanetClassificationState,
         MeasuredValue, OceanProperties, OrbitalProperties, PhysicalProperties, Star, StarId,
         SurfaceChemistryState, SystemId,
     };

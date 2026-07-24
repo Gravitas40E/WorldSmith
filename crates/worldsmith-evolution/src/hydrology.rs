@@ -146,7 +146,7 @@ impl HydrologyModule {
         let atm = total * vapor_fraction;
         let ocean = total * ocean_fraction;
 
-        (ocean, atm, ice, ocean_fraction.max(0.0).min(1.0))
+        (ocean, atm, ice, ocean_fraction.clamp(0.0, 1.0))
     }
 }
 
@@ -268,7 +268,7 @@ impl SimulationModule for HydrologyModule {
                 ));
             }
 
-            if new_liquid < 0.0 || new_liquid > 1.0 {
+            if !(0.0..=1.0).contains(&new_liquid) {
                 return Err(worldsmith_traits::ContractError::ModuleError(
                     "hydrology liquid fraction out of bounds".into(),
                 ));

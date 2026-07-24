@@ -44,7 +44,7 @@
 
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
-    AtmosphereState, ClimateState, ClimateType, HydrologyState, Planet, PlanetId,
+    ClimateState, ClimateType, Planet, PlanetId,
 };
 use worldsmith_state::{FieldKey, SimulationEvent};
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};
@@ -116,8 +116,6 @@ impl ClimateModule {
             ClimateType::Temperate
         } else if effective_temperature < self.config.warm_threshold {
             ClimateType::Tropical
-        } else if effective_temperature < self.config.hot_threshold {
-            ClimateType::RunawayGreenhouse
         } else {
             ClimateType::RunawayGreenhouse
         }
@@ -133,12 +131,12 @@ impl ClimateModule {
         let atmosphere = planet
             .atmosphere_state
             .clone()
-            .unwrap_or_else(|| AtmosphereState::default());
+            .unwrap_or_default();
 
         let hydro = planet
             .hydrology_state
             .clone()
-            .unwrap_or_else(|| HydrologyState::default());
+            .unwrap_or_default();
 
         let total_water = hydro.total_water_mass_kg;
         let ocean_mass = hydro.ocean_mass_kg;

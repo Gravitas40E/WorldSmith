@@ -29,6 +29,7 @@ pub struct BodyMarker {
 /// Keeping the renderer stateless from the Bevy app's perspective allows
 /// it to be stored as a resource and flushed on a schedule.
 #[derive(Resource)]
+#[derive(Default)]
 pub struct BevySceneRenderer {
     /// Latest scene queued by `render()` for ECS synchronization.
     pub(in crate::renderers) scene: Option<RenderScene>,
@@ -40,15 +41,6 @@ pub struct BevySceneRenderer {
         HashMap<String, (SceneBody, Handle<Mesh>, Handle<StandardMaterial>)>,
 }
 
-impl Default for BevySceneRenderer {
-    fn default() -> Self {
-        Self {
-            scene: None,
-            id_map: HashMap::new(),
-            body_states: HashMap::new(),
-        }
-    }
-}
 
 impl SceneRenderer for BevySceneRenderer {
     fn render(&mut self, scene: &RenderScene) {
@@ -221,7 +213,7 @@ fn flush_bodies(
             material_handle = material;
         }
 
-        let is_new = renderer.id_map.get(body_id).is_none();
+        let is_new = !renderer.id_map.contains_key(body_id);
 
         if is_new {
             let entity = commands

@@ -237,7 +237,7 @@ impl SimulationModule for OrbitalDynamicsModule {
 
         // Propagate lunar orbits.
         for (moon_id, parent, sma, ecc, inc, period) in moons {
-            let Some((parent_pos, parent_vel, mass)) = Self::resolve_parent(&world, parent) else {
+            let Some((parent_pos, parent_vel, mass)) = Self::resolve_parent(world, parent) else {
                 continue;
             };
 

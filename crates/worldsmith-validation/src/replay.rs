@@ -171,7 +171,7 @@ pub fn run_golden_simulation(golden: &GoldenWorld, target_ticks: u64) -> serde_j
     for _ in 0..target_ticks {
         engine.tick_fixed().expect("tick golden engine");
     }
-    snapshots_to_json(&engine.state())
+    snapshots_to_json(engine.state())
 }
 
 /// Compare two JSON snapshots for bit-for-bit equality (string equality on

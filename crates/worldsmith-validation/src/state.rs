@@ -208,7 +208,7 @@ fn validate_planet_state(planet: &Planet, planet_id: &str) -> Result<(), StateVa
             .fold(0.0, |s, g| s + g.abundance.value);
         for gas in &atmosphere.atmosphere_composition {
             let frac = gas.abundance.value;
-            if frac < 0.0 || frac > 1.0 {
+            if !(0.0..=1.0).contains(&frac) {
                 return Err(StateValidationError::InvalidEnum {
                     planet_id: planet_id.to_string(),
                 });

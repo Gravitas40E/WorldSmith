@@ -70,7 +70,7 @@ pub fn run_long_run_stability(
 
         // Scan all planets for boundedness and NaN/Inf.
         let snapshot = engine.state();
-        for (_, planet) in snapshot.planets.iter() {
+        for planet in snapshot.planets.values() {
             scan_planet(planet, &mut max_abs).map_err(|msg| {
                 StabilityError::StateValidationFailed {
                     ticks: tick,

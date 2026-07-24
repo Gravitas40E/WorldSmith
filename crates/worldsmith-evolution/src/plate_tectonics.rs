@@ -156,8 +156,6 @@ impl PlateTectonicsModule {
             TectonicActivity::Moderate
         } else if effective_velocity >= c.low_threshold {
             TectonicActivity::Low
-        } else if effective_velocity >= c.dormant_threshold {
-            TectonicActivity::None
         } else {
             TectonicActivity::None
         }

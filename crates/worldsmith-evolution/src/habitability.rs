@@ -9,8 +9,7 @@
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
     AtmosphereState, BiosphereState, CarbonCycleState, ClimateState, ClimateType, CryosphereState,
-    HabitabilityClass, HabitabilityState, HydrologyState, LimitingFactor, Planet,
-    PlanetClassificationState, PlanetId, SurfaceChemistryState,
+    HabitabilityClass, HabitabilityState, HydrologyState, LimitingFactor, Planet, PlanetId, SurfaceChemistryState,
 };
 use worldsmith_state::{FieldKey, SimulationEvent};
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};
@@ -157,6 +156,7 @@ impl HabitabilityModule {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn limiting_factor(
         &self,
         atmo: f64,
@@ -168,16 +168,14 @@ impl HabitabilityModule {
         cryo: f64,
         chem: f64,
     ) -> LimitingFactor {
-        let mut scores = vec![
-            ("Atmosphere", atmo),
+        let mut scores = [("Atmosphere", atmo),
             ("Climate", surface),
             ("Ocean", ocean),
             ("Biosphere", bio),
             ("ClimateStability", climate),
             ("Water", water),
             ("Cryosphere", cryo),
-            ("Chemistry", chem),
-        ];
+            ("Chemistry", chem)];
         scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
         let weakest = scores[0].0;
         match weakest {
@@ -192,6 +190,7 @@ impl HabitabilityModule {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn tick(
         &self,
         mut habitability: HabitabilityState,

@@ -36,7 +36,7 @@ pub struct PlanetClassificationModule {
 }
 
 impl PlanetClassificationModule {
-    pub fn new(config: PlanetClassificationConfig) -> Self {
+    pub fn new(_config: PlanetClassificationConfig) -> Self {
         Self {
             initialized: false,
         }
@@ -77,7 +77,7 @@ impl PlanetClassificationModule {
     fn classify_secondary(
         &self,
         climate: &ClimateState,
-        hydro: &HydrologyState,
+        _hydro: &HydrologyState,
         cryo: &CryosphereState,
         atmo: &AtmosphereState,
         carbon: &CarbonCycleState,
@@ -156,15 +156,14 @@ impl PlanetClassificationModule {
         _hydro: &HydrologyState,
         _cryo: &CryosphereState,
     ) -> f64 {
-        let mut confidence;
-        match primary {
-            PrimaryClassification::Terrestrial => confidence = 0.8,
-            PrimaryClassification::OceanWorld => confidence = 0.85,
-            PrimaryClassification::IceWorld => confidence = 0.85,
-            PrimaryClassification::DesertWorld => confidence = 0.75,
-            PrimaryClassification::LavaWorld => confidence = 0.7,
-            PrimaryClassification::RockyPlanet => confidence = 0.8,
-        }
+        let confidence = match primary {
+            PrimaryClassification::Terrestrial => 0.8,
+            PrimaryClassification::OceanWorld => 0.85,
+            PrimaryClassification::IceWorld => 0.85,
+            PrimaryClassification::DesertWorld => 0.75,
+            PrimaryClassification::LavaWorld => 0.7,
+            PrimaryClassification::RockyPlanet => 0.8,
+        };
         f64::clamp(confidence, 0.0, 1.0)
     }
 
@@ -250,6 +249,7 @@ impl PlanetClassificationModule {
         features
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn tick(
         &self,
         mut classification: PlanetClassificationState,

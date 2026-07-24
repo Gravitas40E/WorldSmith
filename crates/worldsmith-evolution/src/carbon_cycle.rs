@@ -106,6 +106,7 @@ impl CarbonCycleModule {
         }
     }
 
+    #[allow(clippy::field_reassign_with_default)]
     fn initialize_reservoirs(&self, planet: &Planet) -> CarbonCycleState {
         let mut state = CarbonCycleState::default();
         state.atmospheric_carbon_mass_kg = DEFAULT_INITIAL_ATMOSPHERIC_CARBON_KG;
@@ -132,8 +133,7 @@ impl CarbonCycleModule {
             self.config.volcanic_outgassing_efficiency.max(0.0) * volcanism.volcanic_flux;
 
         let land_area_factor = (0.01 + plate_tectonics.plate_velocity * 0.1)
-            .min(1.0)
-            .max(0.0);
+            .clamp(0.0, 1.0);
         let weathering = self.config.weathering_efficiency.max(0.0)
             * (0.5 + climate.planetary_albedo)
             * land_area_factor
@@ -141,8 +141,7 @@ impl CarbonCycleModule {
 
         let ocean_surface_area = if hydro.total_water_mass_kg > 0.0 {
             (hydro.ocean_mass_kg / hydro.total_water_mass_kg)
-                .min(1.0)
-                .max(0.0)
+                .clamp(0.0, 1.0)
         } else {
             0.0
         };

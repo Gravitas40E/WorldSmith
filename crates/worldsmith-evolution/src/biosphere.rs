@@ -100,6 +100,7 @@ impl BiosphereModule {
         }
     }
 
+    #[allow(clippy::field_reassign_with_default)]
     fn initialize_reservoirs(&self, planet: &Planet) -> BiosphereState {
         let mut state = BiosphereState::default();
         state.total_biomass_kg = DEFAULT_INITIAL_TOTAL_BIOMASS_KG;
@@ -126,9 +127,7 @@ impl BiosphereModule {
     ) {
         let temp = climate.equilibrium_temperature_k + climate.greenhouse_temperature_offset_k;
 
-        let temp_suitability = if temp < 250.0 {
-            0.0
-        } else if temp > 320.0 {
+        let temp_suitability = if !(250.0..=320.0).contains(&temp) {
             0.0
         } else {
             let peak = 280.0;

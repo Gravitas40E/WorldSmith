@@ -100,6 +100,7 @@ impl CryosphereModule {
         }
     }
 
+    #[allow(clippy::field_reassign_with_default)]
     fn initialize_reservoirs(&self, planet: &Planet) -> CryosphereState {
         let mut state = CryosphereState::default();
         state.continental_ice_mass_kg = DEFAULT_CONTINENTAL_ICE_MASS_KG;
