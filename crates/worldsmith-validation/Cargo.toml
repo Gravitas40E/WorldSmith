@@ -1,0 +1,31 @@
+[package]
+name = "worldsmith-validation"
+description = "Deterministic scientific validation framework for the WorldSmith Planet Evolution subsystem"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+worldsmith-engine = { path = "../worldsmith-engine" }
+worldsmith-evolution = { path = "../worldsmith-evolution" }
+worldsmith-math = { path = "../worldsmith-math" }
+worldsmith-models = { path = "../worldsmith-models" }
+worldsmith-state = { path = "../worldsmith-state" }
+worldsmith-stellar = { path = "../worldsmith-stellar" }
+worldsmith-traits = { path = "../worldsmith-traits" }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+rand = { workspace = true }
+
+[features]
+default = []
+long-tests = []
+performance = []

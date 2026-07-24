@@ -16,3 +16,4 @@ worldsmith-math = { path = "../worldsmith-math" }
 worldsmith-units = { path = "../worldsmith-units" }
 
 [dev-dependencies]
+serde_json = { workspace = true }

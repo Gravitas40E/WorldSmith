@@ -270,7 +270,7 @@ fn measured(value: f64, unit: &str, equation: &str) -> MeasuredValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use worldsmith_math::constants;
+    use worldsmith_math::{constants, Vector3};
     use worldsmith_models::*;
 
     fn test_planet() -> Planet {
@@ -300,6 +300,7 @@ mod tests {
                 rotation_period_s: Some(measured_val(86_400.0)),
                 axial_tilt_rad: None,
             },
+            interior: None,
             geology: None,
             atmosphere: Some(AtmosphericProperties {
                 atmosphere_type: AtmosphereType::Standard,
@@ -328,7 +329,20 @@ mod tests {
             }),
             magnetic_field: None,
             habitability: None,
+            plate_tectonics: None,
+            atmosphere_state: None,
+            hydrology_state: None,
+            climate_state: None,
+            carbon_cycle_state: None,
+            biosphere_state: None,
+            habitability_state: None,
+            classification_state: None,
+            surface_chemistry_state: None,
+            cryosphere_state: None,
+            volcanism: None,
             moons: Vec::new(),
+            position_m: Vector3::ZERO,
+            velocity_m_s: Vector3::ZERO,
         }
     }
 

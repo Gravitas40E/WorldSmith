@@ -142,8 +142,9 @@ pub enum PlanetClass {
 }
 
 /// Planetary composition or observational type.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum PlanetType {
+    #[default]
     /// Rocky silicate-metal world.
     Rocky,
     /// Ocean-dominated world.
@@ -161,18 +162,27 @@ pub enum PlanetType {
 }
 
 /// Global climate category.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum ClimateType {
     /// No dominant climate assigned.
+    #[default]
     Unknown,
     /// Frozen surface conditions.
     Frozen,
+    /// Cold glaciated world.
+    Cold,
     /// Temperate climate regime.
     Temperate,
     /// Arid climate regime.
     Arid,
     /// Tropical or warm wet climate regime.
     Tropical,
+    /// Warm climate regime.
+    Warm,
+    /// Hot climate regime.
+    Hot,
+    /// Inferno-class surface temperatures.
+    Inferno,
     /// Runaway greenhouse regime.
     RunawayGreenhouse,
     /// Future extension point.
@@ -304,10 +314,49 @@ pub enum HabitabilityRating {
     Other,
 }
 
+/// Habitability classification for V1 assessment.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum HabitabilityClass {
+    /// No known habitable characteristics.
+    #[default]
+    Hostile,
+    /// Minimal conditions for extremophiles.
+    Marginal,
+    /// Potentially habitable for simple life.
+    Habitable,
+    /// Strong habitability indicators.
+    HighlyHabitable,
+    /// Exceptional conditions.
+    Paradise,
+}
+
+/// Dominant limiting factor in habitability assessment.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum LimitingFactor {
+    /// No significant limiting factor.
+    #[default]
+    None,
+    /// Surface temperature too low.
+    TooCold,
+    /// Surface temperature too high.
+    TooHot,
+    /// Insufficient liquid water.
+    TooDry,
+    /// No atmosphere or pressure too low.
+    NoAtmosphere,
+    /// Extreme CO2 levels.
+    ExtremeCO2,
+    /// Insufficient biomass.
+    LowBiomass,
+    /// Global ice cover.
+    GlobalIceCover,
+}
+
 /// Plate tectonic activity level.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum TectonicActivity {
     /// No active tectonics.
+    #[default]
     None,
     /// Low tectonic activity.
     Low,
@@ -320,9 +369,21 @@ pub enum TectonicActivity {
 }
 
 /// Volcanic activity level.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+
+/// Plate tectonics evolution state.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct PlateTectonicsState {
+    /// Plate velocity in centimeters per year.
+    pub plate_velocity: f64,
+    /// Crustal recycling rate in arbitrary mass per second.
+    pub crustal_recycling_rate: f64,
+    /// Classified tectonic activity level.
+    pub tectonic_activity: TectonicActivity,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum VolcanicActivity {
     /// No active volcanism.
+    #[default]
     None,
     /// Low volcanism.
     Low,
@@ -337,6 +398,17 @@ pub enum VolcanicActivity {
 }
 
 /// Stellar body data with physical and kinematic fields.
+
+/// Volcanic evolution state.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct VolcanismState {
+    /// Volcanic mass flux in kilograms per second.
+    pub volcanic_flux: f64,
+    /// Classified volcanic activity level.
+    pub volcanic_activity: VolcanicActivity,
+    /// Magma generation rate in kilograms per second.
+    pub magma_generation_rate: f64,
+}
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Star {
     /// Strong star identifier.
@@ -432,6 +504,23 @@ pub struct PhysicalProperties {
 }
 
 /// Atmospheric composition and vertical structure.
+
+/// Interior planetary state owned by evolution modules.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct InteriorState {
+    /// Elapsed age of the planetary interior in seconds.
+    pub age_seconds: f64,
+    /// Core temperature in kelvin.
+    pub core_temperature: f64,
+    /// Mantle temperature in kelvin.
+    pub mantle_temperature: f64,
+    /// Remaining radiogenic heat in joules.
+    pub radiogenic_heat: f64,
+    /// Stored internal heat in joules.
+    pub internal_heat: f64,
+    /// Surface heat flux in watts per square meter.
+    pub heat_flux: f64,
+}
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AtmosphericProperties {
     /// Broad atmosphere type.
@@ -523,7 +612,250 @@ pub struct AtmosphericGas {
 }
 
 /// Geological interior and surface data.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+
+/// Deterministic bulk atmosphere state owned by the atmosphere module.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct AtmosphereState {
+    /// Total atmospheric mass in kilograms.
+    pub atmospheric_mass_kg: f64,
+    /// Surface pressure in pascals.
+    pub surface_pressure_pa: f64,
+    /// Mean atmospheric temperature in kelvin.
+    pub mean_temperature_k: f64,
+    /// Atmospheric gas composition as a list of abundance samples.
+    pub atmosphere_composition: Vec<AtmosphericGas>,
+}
+
+/// Deterministic bulk hydrosphere state owned by the hydrology module.
+///
+/// This implementation models only planetary-scale water reservoirs.
+/// No weather, precipitation, rivers, groundwater, or ocean circulation
+/// is simulated in V1.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct HydrologyState {
+    /// Total planetary water inventory in kilograms.
+    pub total_water_mass_kg: f64,
+    /// Liquid ocean water mass in kilograms.
+    pub ocean_mass_kg: f64,
+    /// Atmospheric water vapor mass in kilograms.
+    pub atmospheric_water_mass_kg: f64,
+    /// Surface and subsurface ice mass in kilograms.
+    pub ice_mass_kg: f64,
+    /// Fraction of total water that is liquid.
+    pub liquid_water_fraction: f64,
+}
+
+/// Deterministic global climate state owned by the climate module.
+///
+/// This implementation represents a deterministic zero-dimensional
+/// planetary energy balance model.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct ClimateState {
+    /// Equilibrium temperature in kelvin before greenhouse offset.
+    pub equilibrium_temperature_k: f64,
+    /// Greenhouse warming offset applied above equilibrium.
+    pub greenhouse_temperature_offset_k: f64,
+    /// Planetary Bond albedo.
+    pub planetary_albedo: f64,
+    /// Deterministic climate classification.
+    pub climate_classification: ClimateType,
+}
+
+/// Deterministic bulk carbon cycle state owned by the carbon cycle module.
+///
+/// This implementation models only planetary-scale carbon reservoirs and
+/// fluxes between atmosphere, ocean, and lithosphere. No biology, no
+/// carbonate chemistry, and no detailed geochemistry are simulated in V1.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct CarbonCycleState {
+    /// Atmospheric carbon mass in kilograms (primarily CO2).
+    pub atmospheric_carbon_mass_kg: f64,
+    /// Ocean dissolved inorganic carbon mass in kilograms.
+    pub ocean_carbon_mass_kg: f64,
+    /// Lithosphere carbon storage mass in kilograms.
+    pub lithosphere_carbon_mass_kg: f64,
+    /// Volcanic degassing flux into the atmosphere in kilograms per second.
+    pub volcanic_carbon_flux_kg_per_s: f64,
+    /// Silicate weathering removal flux in kilograms per second.
+    pub weathering_flux_kg_per_s: f64,
+    /// Net air-sea gas exchange flux in kilograms per second.
+    pub ocean_exchange_flux_kg_per_s: f64,
+    /// Atmospheric CO2 mole fraction (derived).
+    pub atmospheric_co2_fraction: f64,
+    /// Ratio of ocean to atmospheric carbon mass (derived).
+    pub carbon_partition_ratio: f64,
+    /// Weathering efficiency factor (derived).
+    pub weathering_efficiency: f64,
+}
+
+/// Active ice reservoirs and cryosphere properties.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct CryosphereState {
+    /// Continental ice mass in kilograms.
+    pub continental_ice_mass_kg: f64,
+    /// Sea ice mass in kilograms.
+    pub sea_ice_mass_kg: f64,
+    /// Surface snow mass in kilograms.
+    pub snow_mass_kg: f64,
+    /// Fraction of land surface covered by permanent ice (derived) in [0, 1].
+    pub permanent_ice_fraction: f64,
+    /// Fraction of land surface covered by seasonal snow (derived) in [0, 1].
+    pub seasonal_snow_fraction: f64,
+    /// Ice melt rate in kilograms per second (derived).
+    pub melt_rate_kg_per_s: f64,
+    /// Ice freeze rate in kilograms per second (derived).
+    pub freeze_rate_kg_per_s: f64,
+    /// Total ice as a fraction of total planetary water (derived) in [0, 1].
+    pub planetary_ice_fraction: f64,
+    /// Cryosphere contribution to Bond albedo (derived) in [0, 1].
+    pub cryosphere_albedo_modifier: f64,
+    /// Sea-level contribution from ice melt relative to a reference (derived, meters).
+    pub sea_level_offset_m: f64,
+}
+
+/// Planetary biomass and ecosystem properties.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct BiosphereState {
+    /// Total planetary biomass in kilograms.
+    pub total_biomass_kg: f64,
+    /// Terrestrial (land) biomass in kilograms.
+    pub terrestrial_biomass_kg: f64,
+    /// Marine (ocean) biomass in kilograms.
+    pub marine_biomass_kg: f64,
+    /// Dead organic carbon stored in soils and sediments in kilograms.
+    pub dead_organic_carbon_kg: f64,
+    /// Planetary gross primary productivity in kilograms per second.
+    pub productivity_rate_kg_per_s: f64,
+    /// Planetary total respiration rate in kilograms per second.
+    pub respiration_rate_kg_per_s: f64,
+    /// Derived habitability factor in [0, 1].
+    pub habitability_factor: f64,
+    /// Fraction of land surface covered by vegetation (derived).
+    pub vegetation_fraction: f64,
+    /// Derived ocean productivity factor in [0, 1].
+    pub ocean_productivity_factor: f64,
+}
+
+/// Bulk surface chemistry reservoirs and weathering properties.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct SurfaceChemistryState {
+    /// Bulk silicate reservoir mass in kilograms.
+    pub silicate_mass_kg: f64,
+    /// Carbonate reservoir mass in kilograms.
+    pub carbonate_mass_kg: f64,
+    /// Oxidized surface material mass in kilograms.
+    pub oxidized_material_mass_kg: f64,
+    /// Reduced surface material mass in kilograms.
+    pub reduced_material_mass_kg: f64,
+    /// Dissolved mineral mass in kilograms.
+    pub dissolved_mineral_mass_kg: f64,
+    /// Weathering flux in kilograms per second (derived).
+    pub weathering_rate_kg_per_s: f64,
+    /// Sedimentation flux in kilograms per second (derived).
+    pub sedimentation_rate_kg_per_s: f64,
+    /// Weathering intensity index (derived) in [0, 1].
+    pub weathering_index: f64,
+    /// Surface reactivity index (derived) in [0, 1].
+    pub surface_reactivity: f64,
+    /// Mineral availability index (derived) in [0, 1].
+    pub mineral_availability: f64,
+}
+
+/// Deterministic planetary habitability assessment state.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct HabitabilityState {
+    /// Overall habitability score in [0, 1].
+    pub overall_habitability_index: f64,
+    /// Surface habitability score in [0, 1].
+    pub surface_habitability_index: f64,
+    /// Ocean habitability score in [0, 1].
+    pub ocean_habitability_index: f64,
+    /// Biological potential score in [0, 1].
+    pub biological_potential_index: f64,
+    /// Climate stability score in [0, 1].
+    pub climate_stability_index: f64,
+    /// Water availability score in [0, 1].
+    pub water_availability_index: f64,
+    /// Atmosphere suitability score in [0, 1].
+    pub atmosphere_suitability_index: f64,
+    /// Habitability classification.
+    pub habitability_class: HabitabilityClass,
+    /// Dominant limiting factor, if any.
+    pub limiting_factor: Option<LimitingFactor>,
+}
+
+/// Primary planetary classification categories.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum PrimaryClassification {
+    #[default]
+    Terrestrial,
+    OceanWorld,
+    IceWorld,
+    DesertWorld,
+    LavaWorld,
+    RockyPlanet,
+}
+
+/// Secondary classification modifier.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum SecondaryClassification {
+    #[default]
+    None,
+    Temperate,
+    Frozen,
+    CarbonRich,
+    HighBiomass,
+    LowAtmosphere,
+    DenseAtmosphere,
+}
+
+/// Hydrosphere category for classification.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum HydrosphereCategory {
+    #[default]
+    None,
+    Liquid,
+    Ice,
+    Mixed,
+    Dry,
+}
+
+/// Biosphere category for classification.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub enum BiosphereCategory {
+    #[default]
+    None,
+    LowBiomass,
+    ModerateBiomass,
+    HighBiomass,
+    Dominant,
+}
+
+/// Deterministic planetary classification result.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct PlanetClassificationState {
+    /// Primary classification category.
+    pub primary_classification: PrimaryClassification,
+    /// Secondary modifier, if any.
+    pub secondary_classification: SecondaryClassification,
+    /// Terrestrial type category.
+    pub terrestrial_type: PlanetType,
+    /// Climate category.
+    pub climate_category: ClimateType,
+    /// Hydrosphere category.
+    pub hydrosphere_category: HydrosphereCategory,
+    /// Biosphere category.
+    pub biosphere_category: BiosphereCategory,
+    /// Classification confidence score in [0, 1].
+    pub confidence_score: f64,
+    /// Human-readable classification summary.
+    pub classification_summary: String,
+    /// Notable planetary features.
+    pub notable_features: Vec<String>,
+}
+
+/// Interior geological properties.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct GeologicalProperties {
     /// Core model.
     pub core: Option<CoreProperties>,
@@ -693,8 +1025,32 @@ pub struct Planet {
     pub orbit: OrbitalProperties,
     /// Geological data.
     pub geology: Option<GeologicalProperties>,
-    /// Atmospheric data.
+    /// Atmospheric category and layers.
     pub atmosphere: Option<AtmosphericProperties>,
+    /// Deterministic atmospheric evolution state.
+    pub atmosphere_state: Option<AtmosphereState>,
+    /// Deterministic hydrosphere evolution state.
+    pub hydrology_state: Option<HydrologyState>,
+    /// Deterministic global climate evolution state.
+    pub climate_state: Option<ClimateState>,
+    /// Deterministic carbon cycle evolution state.
+    pub carbon_cycle_state: Option<CarbonCycleState>,
+    /// Deterministic biosphere evolution state.
+    pub biosphere_state: Option<BiosphereState>,
+    /// Deterministic cryosphere evolution state.
+    pub cryosphere_state: Option<CryosphereState>,
+    /// Deterministic surface chemistry evolution state.
+    pub surface_chemistry_state: Option<SurfaceChemistryState>,
+    /// Deterministic habitability assessment state.
+    pub habitability_state: Option<HabitabilityState>,
+    /// Deterministic planetary classification state.
+    pub classification_state: Option<PlanetClassificationState>,
+    /// Interior thermal state.
+    pub interior: Option<InteriorState>,
+    /// Volcanic evolution state.
+    pub volcanism: Option<VolcanismState>,
+    /// Plate tectonic evolution state.
+    pub plate_tectonics: Option<PlateTectonicsState>,
     /// Climate data.
     pub climate: Option<ClimateProperties>,
     /// Ocean data.
@@ -703,6 +1059,10 @@ pub struct Planet {
     pub magnetic_field: Option<MagneticFieldProperties>,
     /// Habitability data.
     pub habitability: Option<HabitabilityProperties>,
+    /// Barycentric position in meters.
+    pub position_m: Vector3,
+    /// Barycentric velocity in meters per second.
+    pub velocity_m_s: Vector3,
     /// Child moon identifiers.
     pub moons: Vec<MoonId>,
 }
@@ -724,6 +1084,18 @@ pub struct Moon {
     pub geology: Option<GeologicalProperties>,
     /// Atmospheric data.
     pub atmosphere: Option<AtmosphericProperties>,
+    /// Deterministic atmospheric evolution state.
+    pub atmosphere_state: Option<AtmosphereState>,
+    /// Deterministic hydrosphere evolution state.
+    pub hydrology_state: Option<HydrologyState>,
+    /// Deterministic global climate evolution state.
+    pub climate_state: Option<ClimateState>,
+    /// Deterministic carbon cycle evolution state.
+    pub carbon_cycle_state: Option<CarbonCycleState>,
+    /// Barycentric position in meters.
+    pub position_m: Vector3,
+    /// Barycentric velocity in meters per second.
+    pub velocity_m_s: Vector3,
     /// Nested child moons.
     pub moons: Vec<MoonId>,
 }

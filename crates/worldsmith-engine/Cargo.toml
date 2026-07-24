@@ -21,3 +21,12 @@ worldsmith-state = { path = "../worldsmith-state" }
 worldsmith-traits = { path = "../worldsmith-traits" }
 
 [dev-dependencies]
+worldsmith-evolution = { path = "../worldsmith-evolution" }
+worldsmith-stellar = { path = "../worldsmith-stellar" }
+worldsmith-planet = { path = "../worldsmith-planet" }
+worldsmith-visualization = { path = "../worldsmith-visualization" }
+criterion = "0.5"
+
+[[bench]]
+name = "engine_benches"
+harness = false

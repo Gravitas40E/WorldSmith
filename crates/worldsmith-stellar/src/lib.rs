@@ -11,6 +11,7 @@ pub mod errors;
 pub mod evolution;
 pub mod habitable_zone;
 pub mod module;
+pub mod orbital_module;
 pub mod radiation;
 pub mod report;
 pub mod validation;

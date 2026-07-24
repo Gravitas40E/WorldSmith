@@ -11,3 +11,6 @@ rust-version.workspace = true
 path = "src/lib.rs"
 
 [dependencies]
+bevy = "0.13"
+worldsmith-state = { path = "../worldsmith-state" }
+worldsmith-models = { path = "../worldsmith-models" }

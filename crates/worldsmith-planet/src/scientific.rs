@@ -191,6 +191,7 @@ pub fn check_planet_consistency(planet: &Planet) -> ContractResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use worldsmith_math::Vector3;
     use worldsmith_models::*;
 
     fn valid_planet() -> Planet {
@@ -236,13 +237,27 @@ mod tests {
                 rotation_period_s: None,
                 axial_tilt_rad: None,
             },
+            interior: None,
             geology: None,
             atmosphere: None,
             climate: None,
             ocean: None,
             magnetic_field: None,
             habitability: None,
+            plate_tectonics: None,
+            atmosphere_state: None,
+            hydrology_state: None,
+            climate_state: None,
+            carbon_cycle_state: None,
+            biosphere_state: None,
+            habitability_state: None,
+            classification_state: None,
+            surface_chemistry_state: None,
+            cryosphere_state: None,
+            volcanism: None,
             moons: Vec::new(),
+            position_m: Vector3::ZERO,
+            velocity_m_s: Vector3::ZERO,
         }
     }
 

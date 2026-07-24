@@ -4,6 +4,7 @@ use worldsmith_engine::{EngineBuilder, EngineResult};
 use worldsmith_state::{
     EventId, EventPayload, EventSource, EventTarget, FieldKey, SimulationEvent,
 };
+use worldsmith_stellar::orbital_module::OrbitalDynamicsModule;
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};
 
 struct DummyModule {
@@ -82,6 +83,11 @@ fn main() -> EngineResult<()> {
             10,
             vec!["stellar_dummy".to_string()],
         )
+        .register_module_with_stage(
+            Box::new(OrbitalDynamicsModule::default()),
+            30,
+            vec!["stellar_dummy".to_string(), "planet_dummy".to_string()],
+        )
         .build()?;
 
     engine.initialize()?;
@@ -91,7 +97,11 @@ fn main() -> EngineResult<()> {
     let diagnostics = engine.diagnostics();
     assert_eq!(
         diagnostics.active_pipeline,
-        vec!["stellar_dummy".to_string(), "planet_dummy".to_string()]
+        vec![
+            "stellar_dummy".to_string(),
+            "planet_dummy".to_string(),
+            "worldsmith.orbital".to_string()
+        ]
     );
     assert_eq!(diagnostics.snapshot_count, 4);
     engine.shutdown()?;

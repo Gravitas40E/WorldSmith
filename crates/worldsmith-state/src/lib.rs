@@ -471,6 +471,158 @@ pub enum FieldKey {
     StellarLuminosity,
     /// Surface gravity in meters per second squared.
     SurfaceGravity,
+    /// Planet mantle temperature in kelvin.
+    MantleTemperature,
+    /// Core-to-mantle heat flux in arbitrary power units.
+    HeatFlux,
+    /// Volcanic heat flux in arbitrary power units.
+    VolcanicFlux,
+    /// Volcanic activity level.
+    VolcanicActivity,
+    /// Magma generation rate.
+    MagmaGenerationRate,
+    /// Plate tectonic activity level.
+    TectonicActivity,
+    /// Average plate velocity in centimeters per year.
+    PlateVelocity,
+    /// Crustal recycling rate in arbitrary mass per second.
+    CrustalRecyclingRate,
+    /// Total atmospheric mass in kilograms.
+    AtmosphericMass,
+    /// Representative atmospheric temperature in kelvin.
+    AtmosphericTemperature,
+    /// Atmospheric gas composition.
+    AtmosphericComposition,
+    /// Total planetary water inventory in kilograms.
+    TotalWaterMass,
+    /// Ocean liquid water mass in kilograms.
+    OceanMass,
+    /// Atmospheric water vapor mass in kilograms.
+    AtmosphericWaterMass,
+    /// Surface and subsurface ice mass in kilograms.
+    IceMass,
+    /// Fraction of total water that is liquid.
+    LiquidWaterFraction,
+    /// Climate equilibrium temperature in kelvin.
+    EquilibriumTemperature,
+    /// Climate greenhouse temperature offset in kelvin.
+    GreenhouseOffset,
+    /// Planetary Bond albedo.
+    PlanetaryAlbedo,
+    /// Deterministic climate classification.
+    ClimateClassification,
+    /// Carbon cycle atmospheric carbon mass in kilograms.
+    AtmosphericCarbonMass,
+    /// Carbon cycle ocean carbon mass in kilograms.
+    OceanCarbonMass,
+    /// Carbon cycle lithosphere carbon mass in kilograms.
+    LithosphereCarbonMass,
+    /// Volcanic carbon flux in kilograms per second.
+    VolcanicCarbonFlux,
+    /// Weathering carbon flux in kilograms per second.
+    WeatheringCarbonFlux,
+    /// Ocean-atmosphere carbon exchange flux in kilograms per second.
+    OceanExchangeFlux,
+    /// Atmospheric CO2 mole fraction.
+    AtmosphericCo2Fraction,
+    /// Carbon partition ratio.
+    CarbonPartitionRatio,
+    /// Weathering efficiency factor.
+    WeatheringEfficiency,
+    /// Total planetary biomass in kilograms.
+    TotalBiomassMass,
+    /// Terrestrial (land) biomass in kilograms.
+    TerrestrialBiomassMass,
+    /// Marine (ocean) biomass in kilograms.
+    MarineBiomassMass,
+    /// Dead organic carbon mass in kilograms.
+    DeadOrganicCarbonMass,
+    /// Planetary gross primary productivity in kilograms per second.
+    ProductivityRate,
+    /// Planetary respiration rate in kilograms per second.
+    RespirationRate,
+    /// Derived habitability factor in [0, 1].
+    HabitabilityFactor,
+    /// Fraction of land surface covered by vegetation.
+    VegetationFraction,
+    /// Derived ocean productivity factor in [0, 1].
+    OceanProductivityFactor,
+    /// Continental ice mass in kilograms.
+    ContinentalIceMass,
+    /// Sea ice mass in kilograms.
+    SeaIceMass,
+    /// Surface snow mass in kilograms.
+    SnowMass,
+    /// Fraction of land covered by permanent ice in [0, 1].
+    PermanentIceFraction,
+    /// Fraction of land covered by seasonal snow in [0, 1].
+    SeasonalSnowFraction,
+    /// Ice melt rate in kilograms per second.
+    MeltRate,
+    /// Ice freeze rate in kilograms per second.
+    FreezeRate,
+    /// Planetary ice fraction of total water in [0, 1].
+    PlanetaryIceFraction,
+    /// Cryosphere contribution to Bond albedo in [0, 1].
+    CryosphereAlbedoModifier,
+    /// Sea-level offset from ice melt in meters.
+    SeaLevelOffset,
+    /// Bulk silicate reservoir mass in kilograms.
+    SilicateMass,
+    /// Carbonate reservoir mass in kilograms.
+    CarbonateMass,
+    /// Oxidized surface material mass in kilograms.
+    OxidizedMaterialMass,
+    /// Reduced surface material mass in kilograms.
+    ReducedMaterialMass,
+    /// Dissolved mineral mass in kilograms.
+    DissolvedMineralMass,
+    /// Weathering flux in kilograms per second.
+    WeatheringRate,
+    /// Sedimentation flux in kilograms per second.
+    SedimentationRate,
+    /// Weathering intensity index in [0, 1].
+    WeatheringIndex,
+    /// Surface reactivity index in [0, 1].
+    SurfaceReactivity,
+    /// Mineral availability index in [0, 1].
+    MineralAvailability,
+    /// Overall habitability index in [0, 1].
+    OverallHabitabilityIndex,
+    /// Surface habitability index in [0, 1].
+    SurfaceHabitabilityIndex,
+    /// Ocean habitability index in [0, 1].
+    OceanHabitabilityIndex,
+    /// Biological potential index in [0, 1].
+    BiologicalPotentialIndex,
+    /// Climate stability index in [0, 1].
+    ClimateStabilityIndex,
+    /// Water availability index in [0, 1].
+    WaterAvailabilityIndex,
+    /// Atmosphere suitability index in [0, 1].
+    AtmosphereSuitabilityIndex,
+    /// Habitability classification.
+    HabitabilityClass,
+    /// Dominant limiting factor.
+    LimitingFactor,
+    /// Primary planetary classification.
+    PrimaryClassification,
+    /// Secondary classification modifier.
+    SecondaryClassification,
+    /// Terrestrial type category.
+    TerrestrialType,
+    /// Climate category.
+    ClimateCategory,
+    /// Hydrosphere category.
+    HydrosphereCategory,
+    /// Biosphere category.
+    BiosphereCategory,
+    /// Classification confidence score in [0, 1].
+    ClassificationConfidence,
+    /// Human-readable classification summary.
+    ClassificationSummary,
+    /// Notable planetary features.
+    NotableFeatures,
 }
 
 /// Registry entry describing a typed field.
@@ -545,6 +697,462 @@ impl FieldRegistry {
             name: "surface_gravity".to_string(),
             unit: Some("m s^-2".to_string()),
             description: "Surface gravity".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::MantleTemperature,
+            name: "mantle_temperature".to_string(),
+            unit: Some("K".to_string()),
+            description: "Representative mantle temperature".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::HeatFlux,
+            name: "heat_flux".to_string(),
+            unit: None,
+            description: "Core-to-mantle heat flux".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::VolcanicFlux,
+            name: "volcanic_flux".to_string(),
+            unit: None,
+            description: "Volcanic heat flux".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::VolcanicActivity,
+            name: "volcanic_activity".to_string(),
+            unit: None,
+            description: "Classified volcanic activity level".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::MagmaGenerationRate,
+            name: "magma_generation_rate".to_string(),
+            unit: None,
+            description: "Magma generation rate".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::TectonicActivity,
+            name: "tectonic_activity".to_string(),
+            unit: None,
+            description: "Classified tectonic activity level".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::PlateVelocity,
+            name: "plate_velocity".to_string(),
+            unit: None,
+            description: "Average plate velocity".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::CrustalRecyclingRate,
+            name: "crustal_recycling_rate".to_string(),
+            unit: None,
+            description: "Crustal recycling rate".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::AtmosphericMass,
+            name: "atmospheric_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Total atmospheric mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::AtmosphericTemperature,
+            name: "mean_temperature_k".to_string(),
+            unit: Some("K".to_string()),
+            description: "Representative atmospheric temperature".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::AtmosphericComposition,
+            name: "atmosphere_composition".to_string(),
+            unit: None,
+            description: "Atmospheric gas composition".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::TotalWaterMass,
+            name: "total_water_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Total planetary water inventory".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::OceanMass,
+            name: "ocean_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Liquid ocean water mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::AtmosphericWaterMass,
+            name: "atmospheric_water_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Atmospheric water vapor mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::IceMass,
+            name: "ice_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Surface and subsurface ice mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::LiquidWaterFraction,
+            name: "liquid_water_fraction".to_string(),
+            unit: None,
+            description: "Fraction of total water that is liquid".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::EquilibriumTemperature,
+            name: "equilibrium_temperature_k".to_string(),
+            unit: Some("K".to_string()),
+            description: "Climate equilibrium temperature".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::GreenhouseOffset,
+            name: "greenhouse_temperature_offset_k".to_string(),
+            unit: Some("K".to_string()),
+            description: "Climate greenhouse warming offset".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::PlanetaryAlbedo,
+            name: "planetary_albedo".to_string(),
+            unit: None,
+            description: "Planetary Bond albedo".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ClimateClassification,
+            name: "climate_classification".to_string(),
+            unit: None,
+            description: "Deterministic climate classification".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::AtmosphericCarbonMass,
+            name: "atmospheric_carbon_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Atmospheric carbon mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::OceanCarbonMass,
+            name: "ocean_carbon_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Ocean carbon mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::LithosphereCarbonMass,
+            name: "lithosphere_carbon_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Lithosphere carbon mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::VolcanicCarbonFlux,
+            name: "volcanic_carbon_flux_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Volcanic carbon flux".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::WeatheringCarbonFlux,
+            name: "weathering_flux_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Weathering carbon flux".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::OceanExchangeFlux,
+            name: "ocean_exchange_flux_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Ocean-atmosphere carbon exchange flux".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::AtmosphericCo2Fraction,
+            name: "atmospheric_co2_fraction".to_string(),
+            unit: None,
+            description: "Atmospheric CO2 mole fraction".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::CarbonPartitionRatio,
+            name: "carbon_partition_ratio".to_string(),
+            unit: None,
+            description: "Ocean to atmospheric carbon mass ratio".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::WeatheringEfficiency,
+            name: "weathering_efficiency".to_string(),
+            unit: None,
+            description: "Weathering efficiency factor".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::TotalBiomassMass,
+            name: "total_biomass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Total planetary biomass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::TerrestrialBiomassMass,
+            name: "terrestrial_biomass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Terrestrial biomass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::MarineBiomassMass,
+            name: "marine_biomass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Marine biomass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::DeadOrganicCarbonMass,
+            name: "dead_organic_carbon_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Dead organic carbon mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ProductivityRate,
+            name: "productivity_rate_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Gross primary productivity".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::RespirationRate,
+            name: "respiration_rate_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Planetary respiration rate".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::HabitabilityFactor,
+            name: "habitability_factor".to_string(),
+            unit: None,
+            description: "Derived habitability factor".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::VegetationFraction,
+            name: "vegetation_fraction".to_string(),
+            unit: None,
+            description: "Fraction of land covered by vegetation".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::OceanProductivityFactor,
+            name: "ocean_productivity_factor".to_string(),
+            unit: None,
+            description: "Derived ocean productivity factor".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ContinentalIceMass,
+            name: "continental_ice_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Continental ice mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SeaIceMass,
+            name: "sea_ice_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Sea ice mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SnowMass,
+            name: "snow_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Surface snow mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::PermanentIceFraction,
+            name: "permanent_ice_fraction".to_string(),
+            unit: None,
+            description: "Fraction of land covered by permanent ice".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SeasonalSnowFraction,
+            name: "seasonal_snow_fraction".to_string(),
+            unit: None,
+            description: "Fraction of land covered by seasonal snow".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::MeltRate,
+            name: "melt_rate_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Ice melt rate".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::FreezeRate,
+            name: "freeze_rate_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Ice freeze rate".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::PlanetaryIceFraction,
+            name: "planetary_ice_fraction".to_string(),
+            unit: None,
+            description: "Total ice as a fraction of total planetary water".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::CryosphereAlbedoModifier,
+            name: "cryosphere_albedo_modifier".to_string(),
+            unit: None,
+            description: "Cryosphere contribution to Bond albedo".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SeaLevelOffset,
+            name: "sea_level_offset_m".to_string(),
+            unit: Some("m".to_string()),
+            description: "Sea-level contribution from ice melt".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SilicateMass,
+            name: "silicate_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Bulk silicate reservoir mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::CarbonateMass,
+            name: "carbonate_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Carbonate reservoir mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::OxidizedMaterialMass,
+            name: "oxidized_material_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Oxidized surface material mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ReducedMaterialMass,
+            name: "reduced_material_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Reduced surface material mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::DissolvedMineralMass,
+            name: "dissolved_mineral_mass_kg".to_string(),
+            unit: Some("kg".to_string()),
+            description: "Dissolved mineral mass".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::WeatheringRate,
+            name: "weathering_rate_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Weathering flux".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SedimentationRate,
+            name: "sedimentation_rate_kg_per_s".to_string(),
+            unit: Some("kg/s".to_string()),
+            description: "Sedimentation flux".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::WeatheringIndex,
+            name: "weathering_index".to_string(),
+            unit: None,
+            description: "Weathering intensity index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SurfaceReactivity,
+            name: "surface_reactivity".to_string(),
+            unit: None,
+            description: "Surface reactivity index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::MineralAvailability,
+            name: "mineral_availability".to_string(),
+            unit: None,
+            description: "Mineral availability index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::OverallHabitabilityIndex,
+            name: "overall_habitability_index".to_string(),
+            unit: None,
+            description: "Overall habitability index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SurfaceHabitabilityIndex,
+            name: "surface_habitability_index".to_string(),
+            unit: None,
+            description: "Surface habitability index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::OceanHabitabilityIndex,
+            name: "ocean_habitability_index".to_string(),
+            unit: None,
+            description: "Ocean habitability index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::BiologicalPotentialIndex,
+            name: "biological_potential_index".to_string(),
+            unit: None,
+            description: "Biological potential index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ClimateStabilityIndex,
+            name: "climate_stability_index".to_string(),
+            unit: None,
+            description: "Climate stability index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::WaterAvailabilityIndex,
+            name: "water_availability_index".to_string(),
+            unit: None,
+            description: "Water availability index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::AtmosphereSuitabilityIndex,
+            name: "atmosphere_suitability_index".to_string(),
+            unit: None,
+            description: "Atmosphere suitability index".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::HabitabilityClass,
+            name: "habitability_class".to_string(),
+            unit: None,
+            description: "Habitability classification".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::LimitingFactor,
+            name: "limiting_factor".to_string(),
+            unit: None,
+            description: "Dominant limiting factor".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::PrimaryClassification,
+            name: "primary_classification".to_string(),
+            unit: None,
+            description: "Primary planetary classification".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::SecondaryClassification,
+            name: "secondary_classification".to_string(),
+            unit: None,
+            description: "Secondary classification modifier".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::TerrestrialType,
+            name: "terrestrial_type".to_string(),
+            unit: None,
+            description: "Terrestrial type category".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ClimateCategory,
+            name: "climate_category".to_string(),
+            unit: None,
+            description: "Climate category".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::HydrosphereCategory,
+            name: "hydrosphere_category".to_string(),
+            unit: None,
+            description: "Hydrosphere category".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::BiosphereCategory,
+            name: "biosphere_category".to_string(),
+            unit: None,
+            description: "Biosphere category".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ClassificationConfidence,
+            name: "classification_confidence".to_string(),
+            unit: None,
+            description: "Classification confidence score".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::ClassificationSummary,
+            name: "classification_summary".to_string(),
+            unit: None,
+            description: "Human-readable classification summary".to_string(),
+        });
+        registry.register(FieldDescriptor {
+            key: FieldKey::NotableFeatures,
+            name: "notable_features".to_string(),
+            unit: None,
+            description: "Notable planetary features".to_string(),
         });
         registry
     }

@@ -7,6 +7,7 @@
 
 use serde::{Deserialize, Serialize};
 use worldsmith_math::constants;
+#[allow(unused_imports)]
 use worldsmith_models::{
     AtmosphereType, AtmosphericGas, AtmosphericLayer, AtmosphericProperties, ClimateType,
     MeasuredValue, Molecule, Planet, WeatherType,
@@ -391,7 +392,8 @@ fn measured(value: f64, unit: &str, equation: &str) -> MeasuredValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use worldsmith_math::constants;
+    use worldsmith_math::{constants, Vector3};
+    #[allow(unused_imports)]
     use worldsmith_models::*;
 
     fn test_planet() -> Planet {
@@ -441,13 +443,27 @@ mod tests {
                 }),
                 axial_tilt_rad: None,
             },
+            interior: None,
             geology: None,
             atmosphere: None,
             climate: None,
             ocean: None,
             magnetic_field: None,
             habitability: None,
+            plate_tectonics: None,
+            atmosphere_state: None,
+            hydrology_state: None,
+            climate_state: None,
+            carbon_cycle_state: None,
+            biosphere_state: None,
+            habitability_state: None,
+            classification_state: None,
+            surface_chemistry_state: None,
+            cryosphere_state: None,
+            volcanism: None,
             moons: Vec::new(),
+            position_m: Vector3::ZERO,
+            velocity_m_s: Vector3::ZERO,
         }
     }
 

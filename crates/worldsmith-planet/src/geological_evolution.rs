@@ -6,6 +6,7 @@
 
 use serde::{Deserialize, Serialize};
 use worldsmith_math::constants;
+#[allow(unused_imports)]
 use worldsmith_models::{
     CrustProperties, GeologicalProperties, MeasuredValue, Planet, TectonicActivity,
     VolcanicActivity,
@@ -210,6 +211,7 @@ fn measured(value: f64, unit: &str, equation: &str) -> MeasuredValue {
 mod tests {
     use super::*;
     use crate::interior::differentiate_interior;
+    use worldsmith_math::Vector3;
     use worldsmith_models::*;
 
     fn test_interior() -> InteriorModel {
@@ -265,6 +267,7 @@ mod tests {
                 }),
                 axial_tilt_rad: None,
             },
+            interior: None,
             geology: None,
             atmosphere: None,
             climate: None,
@@ -280,7 +283,20 @@ mod tests {
             }),
             magnetic_field: None,
             habitability: None,
+            plate_tectonics: None,
+            atmosphere_state: None,
+            hydrology_state: None,
+            climate_state: None,
+            carbon_cycle_state: None,
+            biosphere_state: None,
+            habitability_state: None,
+            classification_state: None,
+            surface_chemistry_state: None,
+            cryosphere_state: None,
+            volcanism: None,
             moons: Vec::new(),
+            position_m: Vector3::ZERO,
+            velocity_m_s: Vector3::ZERO,
         }
     }
 

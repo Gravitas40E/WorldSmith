@@ -5,7 +5,7 @@
 //! scientific consistency, and engine integration.
 
 use worldsmith_engine::EngineBuilder;
-use worldsmith_math::constants;
+use worldsmith_math::{constants, Vector3};
 use worldsmith_models::{
     BodyReference, ClimateType, MeasuredValue, OrbitalProperties, PhysicalProperties, Planet,
     PlanetClass, PlanetId, PlanetType, StarId, SystemId,
@@ -67,13 +67,27 @@ fn test_planet() -> Planet {
             }),
             axial_tilt_rad: None,
         },
+        interior: None,
         geology: None,
         atmosphere: None,
         climate: None,
         ocean: None,
         magnetic_field: None,
         habitability: None,
+        plate_tectonics: None,
+        atmosphere_state: None,
+        hydrology_state: None,
+        climate_state: None,
+        carbon_cycle_state: None,
+        biosphere_state: None,
+        habitability_state: None,
+        classification_state: None,
+        surface_chemistry_state: None,
+        cryosphere_state: None,
+        volcanism: None,
         moons: Vec::new(),
+        position_m: Vector3::ZERO,
+        velocity_m_s: Vector3::ZERO,
     }
 }
 

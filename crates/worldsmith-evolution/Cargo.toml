@@ -1,0 +1,23 @@
+[package]
+name = "worldsmith-evolution"
+description = "Continuous planetary evolution: core, mantle, tectonics, atmosphere, climate, biosphere"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+worldsmith-engine = { path = "../worldsmith-engine" }
+worldsmith-math = { path = "../worldsmith-math" }
+worldsmith-models = { path = "../worldsmith-models" }
+worldsmith-state = { path = "../worldsmith-state" }
+worldsmith-traits = { path = "../worldsmith-traits" }
+
+[dev-dependencies]
+worldsmith-stellar = { path = "../worldsmith-stellar" }

@@ -11,6 +11,17 @@ use crate::{
 };
 
 /// Builder responsible for constructing a validated [`Engine`].
+///
+/// Standard simulation stacks register modules in this order:
+/// 1. `worldsmith.stellar` (star generation)
+/// 2. `worldsmith.planet_formation` (planetesimal accretion)
+/// 3. `worldsmith.planet_evolution` (geophysical/climate evolution)
+/// 4. `worldsmith.orbital` (orbital dynamics, after any module that mutates orbital elements)
+///
+/// Use [`register_module_with_stage`](Self::register_module_with_stage) with
+/// explicit priorities and dependencies to enforce this ordering. The
+/// `SimulationSnapshot` produced by the engine contains the propagated
+/// world-space positions for downstream consumers such as visualization.
 #[derive(Default)]
 pub struct EngineBuilder {
     config: EngineConfig,
