@@ -369,7 +369,6 @@ pub enum TectonicActivity {
 }
 
 /// Volcanic activity level.
-
 /// Plate tectonics evolution state.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct PlateTectonicsState {
@@ -398,7 +397,6 @@ pub enum VolcanicActivity {
 }
 
 /// Stellar body data with physical and kinematic fields.
-
 /// Volcanic evolution state.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct VolcanismState {
@@ -504,7 +502,6 @@ pub struct PhysicalProperties {
 }
 
 /// Atmospheric composition and vertical structure.
-
 /// Interior planetary state owned by evolution modules.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct InteriorState {
@@ -612,7 +609,6 @@ pub struct AtmosphericGas {
 }
 
 /// Geological interior and surface data.
-
 /// Deterministic bulk atmosphere state owned by the atmosphere module.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct AtmosphereState {

@@ -209,7 +209,7 @@ impl SimulationModule for OrbitalDynamicsModule {
 
         // Propagate planetary orbits.
         for (planet_id, parent, sma, ecc, inc, period) in planets {
-            let Some((parent_pos, parent_vel, mass)) = Self::resolve_parent(&world, parent) else {
+            let Some((parent_pos, parent_vel, mass)) = Self::resolve_parent(world, parent) else {
                 continue;
             };
 
@@ -221,20 +221,17 @@ impl SimulationModule for OrbitalDynamicsModule {
                 },
             };
 
-            match propagate_orbit_state(mass, sma, ecc, inc, period, context.timestamp_s, None) {
-                Ok(OrbitState { position, velocity }) => {
-                    if let Some(planet) = world.planets.get_mut(&planet_id) {
-                        planet.position_m = position + parent_pos;
-                        planet.velocity_m_s = velocity + parent_vel;
+            if let Ok(OrbitState { position, velocity }) = propagate_orbit_state(mass, sma, ecc, inc, period, context.timestamp_s, None) {
+                if let Some(planet) = world.planets.get_mut(&planet_id) {
+                    planet.position_m = position + parent_pos;
+                    planet.velocity_m_s = velocity + parent_vel;
 
-                        Self::push_orbital_changed(
-                            &mut world.event_queue,
-                            context.timestamp_s,
-                            EventTarget::Planet(planet_id),
-                        );
-                    }
+                    Self::push_orbital_changed(
+                        &mut world.event_queue,
+                        context.timestamp_s,
+                        EventTarget::Planet(planet_id),
+                    );
                 }
-                Err(_) => {}
             }
         }
 
@@ -252,20 +249,17 @@ impl SimulationModule for OrbitalDynamicsModule {
                 },
             };
 
-            match propagate_orbit_state(mass, sma, ecc, inc, period, context.timestamp_s, None) {
-                Ok(OrbitState { position, velocity }) => {
-                    if let Some(moon) = world.moons.get_mut(&moon_id) {
-                        moon.position_m = position + parent_pos;
-                        moon.velocity_m_s = velocity + parent_vel;
+            if let Ok(OrbitState { position, velocity }) = propagate_orbit_state(mass, sma, ecc, inc, period, context.timestamp_s, None) {
+                if let Some(moon) = world.moons.get_mut(&moon_id) {
+                    moon.position_m = position + parent_pos;
+                    moon.velocity_m_s = velocity + parent_vel;
 
-                        Self::push_orbital_changed(
-                            &mut world.event_queue,
-                            context.timestamp_s,
-                            EventTarget::Moon(moon_id),
-                        );
-                    }
+                    Self::push_orbital_changed(
+                        &mut world.event_queue,
+                        context.timestamp_s,
+                        EventTarget::Moon(moon_id),
+                    );
                 }
-                Err(_) => {}
             }
         }
 

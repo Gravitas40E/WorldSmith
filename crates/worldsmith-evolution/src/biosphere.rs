@@ -49,9 +49,8 @@
 
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
-    AtmosphereState, BiosphereState, CarbonCycleState, ClimateState, CryosphereState,
-    HabitabilityState, HydrologyState, Planet, PlanetClassificationState, PlanetId,
-    SurfaceChemistryState,
+    AtmosphereState, BiosphereState, CarbonCycleState, ClimateState,
+    HydrologyState, Planet, PlanetId,
 };
 use worldsmith_state::{FieldKey, SimulationEvent};
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};

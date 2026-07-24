@@ -7,7 +7,6 @@
 //! PlanetClassificationModule interprets simulation results and never
 //! influences planetary evolution.
 
-use std::fmt;
 
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
@@ -33,14 +32,12 @@ impl Default for PlanetClassificationConfig {
 }
 
 pub struct PlanetClassificationModule {
-    config: PlanetClassificationConfig,
     initialized: bool,
 }
 
 impl PlanetClassificationModule {
     pub fn new(config: PlanetClassificationConfig) -> Self {
         Self {
-            config,
             initialized: false,
         }
     }
@@ -62,7 +59,7 @@ impl PlanetClassificationModule {
         if ice > 0.6 && temp <= 220.0 {
             return PrimaryClassification::IceWorld;
         }
-        if liquid > 0.65 && temp >= 250.0 && temp <= 340.0 {
+        if liquid > 0.65 && (250.0..=340.0).contains(&temp) {
             return PrimaryClassification::OceanWorld;
         }
         if temp > 900.0 && reduced > 0.0 {
@@ -96,8 +93,7 @@ impl PlanetClassificationModule {
         if matches!(
             climate.climate_classification,
             ClimateType::Temperate | ClimateType::Tropical
-        ) && temp >= 250.0
-            && temp <= 320.0
+        ) && (250.0..=320.0).contains(&temp)
         {
             scores.push((SecondaryClassification::Temperate, 0.8));
         }
@@ -160,7 +156,7 @@ impl PlanetClassificationModule {
         _hydro: &HydrologyState,
         _cryo: &CryosphereState,
     ) -> f64 {
-        let mut confidence = 0.7;
+        let mut confidence;
         match primary {
             PrimaryClassification::Terrestrial => confidence = 0.8,
             PrimaryClassification::OceanWorld => confidence = 0.85,
