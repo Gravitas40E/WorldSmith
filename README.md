@@ -270,12 +270,3 @@ Rather than generating planets that merely look believable, WorldSmith models th
 Whether you're creating a strategy game, researching planetary science, or building a procedural universe, WorldSmith is designed to provide deterministic, explainable, and extensible world simulation.
 
 ---
-
-## License
-
-Dual licensed under either of:
-
-- MIT License
-- Apache License 2.0
-
-Choose whichever license best fits your project.
