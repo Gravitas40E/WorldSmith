@@ -1,4 +1,5 @@
 # WorldSmith
+<img width="1300" height="643" alt="Screenshot_116" src="https://github.com/user-attachments/assets/8512fc86-a191-43d2-9c42-a722cca8df63" />
 
 *A deterministic planetary evolution engine written in Rust.*
 
@@ -27,6 +28,8 @@ The project is intended for:
 
 ---
 
+<img width="729" height="647" alt="Screenshot_117" src="https://github.com/user-attachments/assets/cb299b2a-2a77-480a-a9e9-e1a3ece53190" />
+
 ## Features
 
 - Deterministic simulation pipeline
@@ -43,6 +46,8 @@ The project is intended for:
 ---
 
 ## Simulation Pipeline
+
+<img width="673" height="836" alt="Screenshot_118" src="https://github.com/user-attachments/assets/c33a77bb-0f46-417a-bdc9-2917122447a7" />
 
 ```text
 Core
@@ -110,6 +115,8 @@ Visualization is intentionally separated from simulation.
 
 ## Architecture
 
+<img width="847" height="830" alt="Screenshot_119" src="https://github.com/user-attachments/assets/30df4876-34c1-4105-a2f6-545991b36f85" />
+
 | Crate | Purpose |
 |--------|---------|
 | `worldsmith-engine` | Scheduler and simulation engine |
@@ -175,6 +182,8 @@ Reproducibility is guaranteed through:
 ---
 
 ## Testing
+
+<img width="900" height="807" alt="Screenshot_120" src="https://github.com/user-attachments/assets/ca4a8015-a4dc-4bd6-8154-13e491692aab" />
 
 The project currently includes:
 
