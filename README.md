@@ -1,8 +1,6 @@
 # WorldSmith
 <img width="1300" height="643" alt="Screenshot_116" src="https://github.com/user-attachments/assets/8512fc86-a191-43d2-9c42-a722cca8df63" />
 
-*A deterministic planetary evolution engine written in Rust.*
-
 WorldSmith is an open-source simulation engine for generating scientifically plausible planets through deterministic physical models. Instead of relying on procedural noise or arbitrary random generation, every planetary property emerges from reproducible simulations of geological, atmospheric, hydrological, and climatic processes.
 
 Designed as reusable infrastructure rather than a game engine, WorldSmith provides developers, researchers, and simulation projects with a modular foundation for explainable procedural world generation.
