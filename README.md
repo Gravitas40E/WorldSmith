@@ -1,4 +1,4 @@
-![Rust](https://img.shields.io/badge/Rust-2024-orange)
+![Rust](https://img.shields.io/badge/Rust-stable-orange?logo=rust)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 # WorldSmith
 <img width="1300" height="643" alt="Screenshot_116" src="https://github.com/user-attachments/assets/8512fc86-a191-43d2-9c42-a722cca8df63" />
