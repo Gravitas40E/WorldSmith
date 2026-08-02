@@ -1,236 +1,273 @@
 # WorldSmith
 
-A deterministic planetary evolution engine written in Rust.
+*A deterministic planetary evolution engine written in Rust.*
 
-WorldSmith simulates the physical evolution of planets from initial conditions through deterministic, explainable scientific models. Every observable property—orbit, composition, interior, surface, atmosphere, climate, and habitability—emerges from simulated physical processes, not arbitrary procedural generation.
+WorldSmith is an open-source simulation engine for generating scientifically plausible planets through deterministic physical models. Instead of relying on procedural noise or arbitrary random generation, every planetary property emerges from reproducible simulations of geological, atmospheric, hydrological, and climatic processes.
 
-WorldSmith is **not** a procedural noise generator, game engine, or renderer. It is a scientific simulation engine that evolves planets through a fixed, reproducible pipeline.
+Designed as reusable infrastructure rather than a game engine, WorldSmith provides developers, researchers, and simulation projects with a modular foundation for explainable procedural world generation.
 
-## Overview
+---
 
-WorldSmith treats a planet as a set of coupled physical systems. Each system is modeled as an independent module that reads a defined set of inputs and writes exactly one state. The scheduler runs all modules in a deterministic order, producing bit-for-bit reproducible results for a given seed and initial conditions.
+## Why WorldSmith?
 
-This design makes it possible to:
+Most procedural planet generators focus on producing visually interesting worlds.
 
-- Reproduce any world exactly from its seed
-- Trace every planetary property back to the module that produced it
-- Add new physics without changing existing modules
-- Validate scientific output against known constraints
+**WorldSmith focuses on producing explainable worlds.**
 
-## Design Philosophy
+Every mountain range, atmosphere, ocean, and climate can be traced back to the physical processes that created it. Given the same seed and configuration, the engine always produces identical results, making simulations reproducible, debuggable, and scientifically inspectable.
 
-- **Determinism** — Fixed seed, same inputs, same output every time.
-- **Explainability** — Every state field has a single owner module.
-- **Modular architecture** — Physics systems are independent and composable.
-- **Single ownership** — One module writes each state; no other module mutates it.
-- **Plugin architecture** — Modules register by priority and dependency; the scheduler builds a DAG at runtime.
-- **Renderer independence** — Simulation has no coupling to graphics, UI, or gameplay.
-- **Reproducibility** — Automated replay tests verify that identical seeds produce identical worlds.
+The project is intended for:
 
-## Status
+- Scientific and educational simulations
+- Procedural world generation
+- Strategy and simulation games
+- Space exploration projects
+- Planetary visualization tools
+- Research into deterministic simulation systems
 
-**v1.0.0 released.** Core simulation modules implemented and tested. Public API is stable.
+---
 
-## Architecture
+## Features
 
-| Crate | Role |
-|---|---|
-| `worldsmith-math` | Vector types and math utilities |
-| `worldsmith-models` | Planetary state structs, enums, properties |
-| `worldsmith-state` | World state, events, snapshots, serialization descriptors |
-| `worldsmith-traits` | `SimulationModule` trait, `StateWriter` |
-| `worldsmith-engine` | Engine, scheduler, plugin pipeline, `EngineBuilder` |
-| `worldsmith-evolution` | Physics simulation modules |
-| `worldsmith-planet` | Planet construction and configuration |
-| `worldsmith-stellar` | Stellar and orbital dynamics |
-| `worldsmith-validation` | Invariant checks, replay tests, performance benchmarks |
-| `worldsmith-rng` | Reproducible random number generation |
-| `worldsmith-units` | Physical unit constants |
-| `worldsmith-grid` | Spatial indexing |
-| `worldsmith-io` | File I/O (planned) |
-| `worldsmith-serialization` | Snapshot serialization (planned) |
-| `worldsmith-visualization` | Data visualization (planned) |
-| `worldsmith-ui` | User interface (planned) |
-| `worldsmith-cli` | Command-line interface (planned) |
-| `worldsmith-app` | Desktop application (planned) |
-| `worldsmith-presets` | Preset configurations (planned) |
+- Deterministic simulation pipeline
+- Modular physics architecture
+- Plugin-based execution scheduler
+- Directed Acyclic Graph (DAG) dependency system
+- Reproducible fixed-seed simulations
+- Planet snapshots
+- Validation and invariant checking
+- Replay testing
+- Benchmarks
+- Fully documented public API
+
+---
 
 ## Simulation Pipeline
 
+```text
+Core
+ ↓
+Mantle
+ ↓
+Volcanism
+ ↓
+Plate Tectonics
+ ↓
+Atmosphere
+ ↓
+Hydrology
+ ↓
+Climate
+ ↓
+Carbon Cycle
+ ↓
+Biosphere
+ ↓
+Cryosphere
+ ↓
+Surface Chemistry
+ ↓
+Habitability
+ ↓
+Planet Classification
 ```
-Core → Mantle → Volcanism → Plate Tectonics → Atmosphere
-  → Hydrology → Climate → Carbon Cycle → Biosphere
-  → Cryosphere → Surface Chemistry → Habitability
-  → Planet Classification
-```
 
-The pipeline is a Directed Acyclic Graph (DAG). Each arrow represents a data dependency. Modules at the same priority level run in registration order.
+Each module represents an independent physical system with clearly defined inputs and outputs. Modules execute through a dependency-driven scheduler that guarantees deterministic execution order.
 
-### Ownership
+---
 
-Every persistent state struct has exactly one owner module. No other module reads or writes that struct's mutable state.
+## Design Principles
 
-| State Struct | Owner Module |
-|---|---|
-| `CoreState` | `CoreEvolutionModule` |
-| `MantleState` | `MantleEvolutionModule` |
-| `VolcanismState` | `VolcanismModule` |
-| `PlateTectonicsState` | `PlateTectonicsModule` |
-| `AtmosphereState` | `AtmosphereModule` |
-| `HydrologyState` | `HydrologyModule` |
-| `ClimateState` | `ClimateModule` |
-| `CarbonCycleState` | `CarbonCycleModule` |
-| `BiosphereState` | `BiosphereModule` |
-| `CryosphereState` | `CryosphereModule` |
-| `SurfaceChemistryState` | `SurfaceChemistryModule` |
-| `HabitabilityState` | `HabitabilityModule` |
-| `PlanetClassificationState` | `PlanetClassificationModule` |
+### Deterministic
 
-Assessment modules (`Habitability`, `PlanetClassification`) do not influence any physical state.
+Identical seed + identical inputs = identical world.
+
+WorldSmith guarantees bit-for-bit reproducible simulations.
+
+### Explainable
+
+Every piece of planetary state has a single owner.
+
+No hidden mutations.
+
+No unpredictable side effects.
+
+Every result can be traced back to the module responsible for producing it.
+
+### Modular
+
+Simulation systems are isolated into independent modules.
+
+New physics can be introduced without modifying existing systems.
+
+### Renderer Independent
+
+The engine contains no rendering, UI, or gameplay logic.
+
+Visualization is intentionally separated from simulation.
+
+---
+
+## Architecture
+
+| Crate | Purpose |
+|--------|---------|
+| `worldsmith-engine` | Scheduler and simulation engine |
+| `worldsmith-evolution` | Physics simulation modules |
+| `worldsmith-models` | Planet state definitions |
+| `worldsmith-state` | Snapshots and world state |
+| `worldsmith-traits` | Module interfaces |
+| `worldsmith-stellar` | Orbital and stellar simulation |
+| `worldsmith-validation` | Replay testing and validation |
+| `worldsmith-rng` | Deterministic random generation |
+| `worldsmith-units` | Physical constants |
+| `worldsmith-grid` | Spatial indexing |
+
+Additional crates provide visualization, serialization, UI, presets, and application tooling.
+
+---
 
 ## Scientific Scope
 
-### Implemented in v1.0
+### Currently Implemented
 
 - Interior thermal evolution
-- Volcanism and magma generation
-- Plate tectonics and crustal recycling
-- Atmospheric composition and pressure
-- Hydrology and water reservoirs
-- Climate equilibrium and greenhouse effect
-- Carbon cycle and carbonate-silicate weathering
-- Biosphere and biomass dynamics
-- Cryosphere and ice reservoirs
-- Surface chemistry and weathering
+- Core evolution
+- Mantle dynamics
+- Volcanism
+- Plate tectonics
+- Atmospheric evolution
+- Hydrology
+- Climate equilibrium
+- Carbon cycle
+- Biosphere simulation
+- Cryosphere
+- Surface chemistry
 - Habitability assessment
 - Planet classification
 
-### Not Included in v1.0
+### Planned
 
-The following are intentionally excluded and reserved for future research or Phases beyond v1.0:
-
+- Ocean circulation
 - Weather systems
-- Rivers and ocean circulation
-- Erosion and sediment transport
-- Civilization or biosphere intelligence simulation
-- Rendering, visualization, or gameplay systems
-- Real-time interactive editing
+- Cloud simulation
+- Erosion
+- Sediment transport
+- Geological history
+- Ecological evolution
 
-## Testing
-
-- **282 passing tests** covering unit, integration, validation, ownership, snapshot, and deterministic replay cases
-- Automated tests verify that identical seeds produce identical snapshots
-- Validation layer enforces physical bounds, NaN/Inf checks, and cross-module invariants
+---
 
 ## Determinism
 
-WorldSmith is deterministic by design. The same seed, planet configuration, and tick count always produce the same simulation state. This property is verified by automated replay tests and is guaranteed by:
+WorldSmith is deterministic by design.
 
-- Pure-function modules with no hidden state
-- Fixed-seed RNG consumed in a reproducible order
-- No I/O or timers during `tick()`
+Reproducibility is guaranteed through:
+
+- Fixed-seed RNG
+- Pure simulation modules
+- Deterministic scheduling
+- Replay validation
+- Snapshot verification
+- No hidden mutable global state
+- No runtime I/O during simulation
+
+---
+
+## Testing
+
+The project currently includes:
+
+- **282+ automated tests**
+- Unit tests
+- Integration tests
+- Deterministic replay tests
+- Validation tests
+- Snapshot verification
+- Performance benchmarks
+
+Automated validation ensures simulations remain physically consistent while preventing regressions as new systems are added.
+
+---
 
 ## Benchmarks
 
-Measured on `worldsmith-engine` with stubbed modules in release profile:
+| Operation | Performance |
+|-----------|------------:|
+| Planet generation | **1.58 µs** |
+| 100 simulation ticks | **1.50 ms** |
+| 1000 simulation ticks | **24.7 ms** |
+| Snapshot creation | **1.16 µs** |
 
-| Benchmark | Result |
-|---|---|
-| Planet generation | 1.58 µs |
-| 100 ticks | 1.50 ms |
-| 1000 ticks | 24.7 ms |
-| Snapshot creation | 1.16 µs |
+---
 
 ## Examples
 
-Five example programs are included with `worldsmith-engine`:
+Example programs demonstrate:
 
-| Example | Description |
-|---|---|
-| `create_planet.rs` | Create a planet and initialize it in the engine |
-| `evolve_planet.rs` | Evolve a planet through 100 ticks |
-| `save_snapshot.rs` | Capture a simulation snapshot |
-| `deterministic_replay.rs` | Verify identical output from two engines with the same seed |
-| `inspect_planet.rs` | Print atmosphere, hydro, climate, and classification state |
-
-## Getting Started
+- Creating planets
+- Running simulations
+- Inspecting planetary state
+- Snapshot generation
+- Deterministic replay validation
 
 ```bash
-# Build everything
 cargo build --workspace
 
-# Run tests
 cargo test --workspace
 
-# Run examples
 cargo run --example create_planet -p worldsmith-engine
 cargo run --example evolve_planet -p worldsmith-engine
 cargo run --example inspect_planet -p worldsmith-engine
 cargo run --example deterministic_replay -p worldsmith-engine
 ```
 
-## Project Structure
-
-```
-crates/
-  worldsmith-math/        Linear algebra and utilities
-  worldsmith-models/      Planetary types and state definitions
-  worldsmith-state/       World state, events, snapshots, field registry
-  worldsmith-traits/      SimulationModule trait and consumers
-  worldsmith-evolution/   Core simulation modules (physics pipeline)
-  worldsmith-engine/      Engine, scheduler, pipeline, builder
-  worldsmith-planet/      Planet construction utilities
-  worldsmith-validation/  Invariants, replay, performance, cross-module tests
-  worldsmith-stellar/     Stellar and orbital dynamics
-  worldsmith-rng/         Reproducible RNG utilities
-  worldsmith-units/       Unit constants and conversions
-  worldsmith-grid/        Spatial indexing
-  worldsmith-io/          File I/O (planned)
-  worldsmith-serialization/ Snapshot serialization (planned)
-  ...
-examples/                 Runnable engine examples
-docs/                     Architecture, getting started, simulation overview
-```
-
-## Key Concepts
-
-- **Deterministic**: Fixed seed → identical simulation every time.
-- **Single ownership**: One module writes each state; no other module mutates it.
-- **Snapshots**: Immutable captures of the full world state at any tick.
-- **Plugins**: Modules register by priority and dependency; the scheduler runs a DAG.
+---
 
 ## Roadmap
 
-### v1.0 — Science Core (Complete)
+### v1.0
 
-- 13 evolution modules
-- Deterministic scheduler
-- Snapshot system
-- Validation layer
+- Deterministic simulation engine
+- Physics modules
+- Validation framework
+- Replay testing
 - Public API
-- Documentation
-- Benchmarks
-- Examples
 
-### v2.0 — Renderer and I/O
+### v2.0
 
-- OpenGL / WebGPU renderer
-- Snapshot save/load
-- Interactive timeline scrubbing
-- Terrain and atmosphere visualization
+- Snapshot serialization
+- Interactive visualization
+- Renderer
+- Timeline playback
+- Desktop application
 
-### Future Research
+### Future
 
-- Oceans and ocean circulation
-- Weather and cloud systems
-- Erosion and sediment transport
-- Plate motion history and paleogeography
-- Life evolution and ecological dynamics
+- Weather simulation
+- Ocean circulation
+- Terrain generation
+- Paleogeography
+- Ecological evolution
+- GPU acceleration
+
+---
 
 ## Vision
 
-WorldSmith exists to make procedural worlds explainable. Every mountain, ocean, and atmosphere should be traceable to the physical processes that created it. By combining deterministic simulation with rigorous modular architecture, WorldSmith provides a foundation for scientific worldbuilding that is reproducible, extensible, and rooted in real physics.
+WorldSmith aims to become an open-source foundation for deterministic planetary simulation.
+
+Rather than generating planets that merely look believable, WorldSmith models the physical processes that create them. By combining scientific simulation with modern software architecture, it provides reusable infrastructure for anyone building educational software, scientific tools, simulation engines, or next-generation procedural worlds.
+
+Whether you're creating a strategy game, researching planetary science, or building a procedural universe, WorldSmith is designed to provide deterministic, explainable, and extensible world simulation.
+
+---
 
 ## License
 
-MIT OR Apache-2.0
+Dual licensed under either of:
+
+- MIT License
+- Apache License 2.0
+
+Choose whichever license best fits your project.
