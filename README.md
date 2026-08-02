@@ -1,4 +1,5 @@
 # WorldSmith
+![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 <img width="1300" height="643" alt="Screenshot_116" src="https://github.com/user-attachments/assets/8512fc86-a191-43d2-9c42-a722cca8df63" />
 
 
