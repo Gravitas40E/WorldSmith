@@ -26,6 +26,7 @@ members = [
     "crates/worldsmith-app",
     "crates/worldsmith-evolution",
     "crates/worldsmith-validation",
+    "crates/worldsmith-web",
 ]
 
 [workspace.package]

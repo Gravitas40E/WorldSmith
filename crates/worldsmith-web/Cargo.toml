@@ -1,0 +1,34 @@
+[package]
+name = "worldsmith-web"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+serde = { workspace = true, features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+worldsmith-engine = { path = "../worldsmith-engine" }
+worldsmith-math = { path = "../worldsmith-math" }
+worldsmith-models = { path = "../worldsmith-models" }
+worldsmith-planet = { path = "../worldsmith-planet" }
+worldsmith-stellar = { path = "../worldsmith-stellar" }
+worldsmith-state = { path = "../worldsmith-state" }
+worldsmith-traits = { path = "../worldsmith-traits" }
+console_error_panic_hook = { version = "0.1", optional = true }
+wee_alloc = { version = "0.4", optional = true }
+getrandom = { version = "0.2", features = ["js"] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+[features]
+default = ["console_error_panic_hook"]
+wee_alloc = ["dep:wee_alloc"]

@@ -1,0 +1,15 @@
+{
+  "name": "worldsmith-wasm",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./pkg/worldsmith_web.js",
+  "types": "./src/lib.ts",
+  "scripts": {
+    "build": "cd ../crates/worldsmith-web && wasm-pack build --out-dir ../wasm/pkg",
+    "preview": "cd ../crates/worldsmith-web && wasm-pack build --dev --out-dir ../wasm/pkg"
+  },
+  "files": [
+    "pkg/**/*",
+    "src/**/*"
+  ]
+}
