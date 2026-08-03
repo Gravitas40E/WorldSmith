@@ -1,7 +1,6 @@
 //! Create a simulation snapshot and print it.
 
 use worldsmith_engine::EngineBuilder;
-use worldsmith_evolution::EvolutionPlugin;
 use worldsmith_models::{Planet, PlanetId};
 
 fn main() -> worldsmith_engine::EngineResult<()> {

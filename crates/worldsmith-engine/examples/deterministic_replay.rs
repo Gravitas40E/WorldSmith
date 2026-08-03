@@ -1,7 +1,6 @@
 //! Demonstrates deterministic replay: two engines with the same seed produce identical outputs.
 
 use worldsmith_engine::EngineBuilder;
-use worldsmith_evolution::EvolutionPlugin;
 use worldsmith_models::PlanetId;
 
 fn main() -> worldsmith_engine::EngineResult<()> {

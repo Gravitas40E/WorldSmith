@@ -9,7 +9,8 @@
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
     AtmosphereState, BiosphereState, CarbonCycleState, ClimateState, ClimateType, CryosphereState,
-    HabitabilityClass, HabitabilityState, HydrologyState, LimitingFactor, Planet, PlanetId, SurfaceChemistryState,
+    HabitabilityClass, HabitabilityState, HydrologyState, LimitingFactor, Planet, PlanetId,
+    SurfaceChemistryState,
 };
 use worldsmith_state::{FieldKey, SimulationEvent};
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};
@@ -168,14 +169,16 @@ impl HabitabilityModule {
         cryo: f64,
         chem: f64,
     ) -> LimitingFactor {
-        let mut scores = [("Atmosphere", atmo),
+        let mut scores = [
+            ("Atmosphere", atmo),
             ("Climate", surface),
             ("Ocean", ocean),
             ("Biosphere", bio),
             ("ClimateStability", climate),
             ("Water", water),
             ("Cryosphere", cryo),
-            ("Chemistry", chem)];
+            ("Chemistry", chem),
+        ];
         scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
         let weakest = scores[0].0;
         match weakest {

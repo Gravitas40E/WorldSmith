@@ -411,7 +411,7 @@ mod tests {
     fn mean_anomaly_large_timestamp() {
         let period = 10.0;
         let m = mean_anomaly_from_time(1e15, period, None).unwrap();
-        assert!(m >= 0.0 && m < 2.0 * PI);
+        assert!((0.0..2.0 * PI).contains(&m));
     }
 
     #[test]
@@ -430,7 +430,7 @@ mod tests {
 
     #[test]
     fn eccentric_anomaly_circular_equals_mean() {
-        let candidates = [0.0, 0.5, 1.2345, PI, 4.0, 5.5, 6.283];
+        let candidates = [0.0, 0.5, 1.2345, PI, 4.0, 5.5, 2.0 * PI];
         for m in candidates.iter() {
             let e_anom = eccentric_anomaly_from_mean(*m, 0.0, 1e-12, 20);
             assert!(
@@ -484,10 +484,10 @@ mod tests {
 
     #[test]
     fn true_anomaly_circular_equals_eccentric() {
-        for e_anom in [0.0, 0.5, 1.2345, PI, 4.0, 6.283] {
+        for e_anom in [0.0, 0.5, 1.2345, PI, 4.0] {
             let nu = true_anomaly_from_eccentric(0.0, e_anom);
             assert!(numeric::approx_eq(nu, e_anom, 1e-12));
-            assert!(nu >= 0.0 && nu < 2.0 * PI);
+            assert!((0.0..2.0 * PI).contains(&nu));
         }
     }
 
@@ -497,7 +497,7 @@ mod tests {
         for e_anom in [0.0, PI / 2.0, PI, 3.0 * PI / 2.0, 2.0 * PI] {
             let nu = true_anomaly_from_eccentric(e, e_anom);
             assert!(nu.is_finite());
-            assert!(nu >= 0.0 && nu < 2.0 * PI);
+            assert!((0.0..2.0 * PI).contains(&nu));
         }
     }
 

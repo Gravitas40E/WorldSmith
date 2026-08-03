@@ -6,12 +6,12 @@
 use worldsmith_engine::EngineBuilder;
 use worldsmith_evolution::{
     AtmosphereModule, ClimateModule, CoreEvolutionModule, EvolutionPlugin, HydrologyModule,
-    MantleEvolutionModule, PlateTectonicsModule, VolcanismModule,
+    PlateTectonicsModule,
 };
 use worldsmith_math::Vector3;
 use worldsmith_models::{
-    AtmosphereState, BodyReference, ClimateState, HydrologyState, MeasuredValue, OrbitalProperties,
-    PhysicalProperties, Planet, PlanetId, PlanetType, Star, StarClass, StarId, SystemId,
+    AtmosphereState, BodyReference, HydrologyState, MeasuredValue, OrbitalProperties,
+    PhysicalProperties, Planet, PlanetId, PlanetType, Star, StarId, SystemId,
 };
 
 fn earth_like_planet() -> Planet {
@@ -312,9 +312,9 @@ fn hydrology_module_executes_and_mutates_hydrology_state() {
 
     engine.state_mut().planets.insert(planet_id, planet);
     engine.state_mut().stars.insert(star_id, star);
-    engine.initialize();
-    engine.tick(100.0);
-    engine.tick(100.0);
+    let _ = engine.initialize();
+    let _ = engine.tick(100.0);
+    let _ = engine.tick(100.0);
 
     let updated = engine.state().planets.get(&planet_id).unwrap();
     assert!(updated.hydrology_state.is_some());
@@ -374,7 +374,7 @@ fn hydrology_does_not_modify_atmosphere_state() {
         velocity_m_s: worldsmith_math::Vector3::ZERO,
     };
 
-    let mut planet = Planet {
+    let planet = Planet {
         id: PlanetId(1),
         name: "Earth".into(),
         class: worldsmith_models::PlanetClass::Terrestrial,
@@ -446,9 +446,9 @@ fn hydrology_does_not_modify_atmosphere_state() {
 
     engine.state_mut().planets.insert(planet_id, planet);
     engine.state_mut().stars.insert(star_id, star);
-    engine.initialize();
-    engine.tick(100.0);
-    engine.tick(100.0);
+    let _ = engine.initialize();
+    let _ = engine.tick(100.0);
+    let _ = engine.tick(100.0);
 
     let updated = engine.state().planets.get(&planet_id).unwrap();
     assert!(updated.hydrology_state.is_some());
@@ -476,8 +476,8 @@ fn snapshot_carries_plate_tectonics_state_after_tick() {
         .state_mut()
         .planets
         .insert(planet_id, earth_like_planet());
-    engine.initialize();
-    engine.tick(100.0);
+    let _ = engine.initialize();
+    let _ = engine.tick(100.0);
 
     let snapshot = engine.latest_snapshot().expect("snapshot");
     let planet = snapshot.planets.iter().find(|p| p.id == planet_id).unwrap();
@@ -496,7 +496,7 @@ fn climate_module_executes_and_mutates_climate_state() {
 
     let planet_id = PlanetId(1);
     let star_id = StarId(1);
-    let system_id = SystemId(1);
+    let _system_id = SystemId(1);
     let star = Star {
         id: star_id,
         name: "Sol".into(),
@@ -603,11 +603,11 @@ fn climate_module_executes_and_mutates_climate_state() {
         moons: Vec::new(),
     };
 
-    engine.initialize();
+    let _ = engine.initialize();
     engine.state_mut().planets.insert(planet_id, planet);
     engine.state_mut().stars.insert(star_id, star);
-    engine.tick(100.0);
-    engine.tick(100.0);
+    let _ = engine.tick(100.0);
+    let _ = engine.tick(100.0);
 
     let updated = engine.state().planets.get(&planet_id).unwrap();
     assert!(updated.climate_state.is_some());
@@ -693,7 +693,7 @@ fn climate_does_not_modify_atmosphere_state() {
         velocity_m_s: worldsmith_math::Vector3::ZERO,
     };
 
-    let mut planet = Planet {
+    let planet = Planet {
         id: PlanetId(1),
         name: "Earth".into(),
         class: worldsmith_models::PlanetClass::Terrestrial,
@@ -765,9 +765,9 @@ fn climate_does_not_modify_atmosphere_state() {
 
     engine.state_mut().planets.insert(planet_id, planet);
     engine.state_mut().stars.insert(star_id, star);
-    engine.initialize();
-    engine.tick(100.0);
-    engine.tick(100.0);
+    let _ = engine.initialize();
+    let _ = engine.tick(100.0);
+    let _ = engine.tick(100.0);
 
     let updated = engine.state().planets.get(&planet_id).unwrap();
     assert!(updated.climate_state.is_some());
@@ -832,7 +832,7 @@ fn snapshots_contain_climate_state() {
         velocity_m_s: worldsmith_math::Vector3::ZERO,
     };
 
-    let mut planet = Planet {
+    let planet = Planet {
         id: PlanetId(1),
         name: "Earth".into(),
         class: worldsmith_models::PlanetClass::Terrestrial,
@@ -899,9 +899,9 @@ fn snapshots_contain_climate_state() {
 
     engine.state_mut().planets.insert(planet_id, planet);
     engine.state_mut().stars.insert(star_id, star);
-    engine.initialize();
-    engine.tick(100.0);
-    engine.tick(100.0);
+    let _ = engine.initialize();
+    let _ = engine.tick(100.0);
+    let _ = engine.tick(100.0);
 
     let snapshot = engine.latest_snapshot().expect("snapshot");
     assert_ne!(snapshot.planets.len(), 0);

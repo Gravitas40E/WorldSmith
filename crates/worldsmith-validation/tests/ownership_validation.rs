@@ -66,7 +66,7 @@ fn validate_field_ownership_detects_simulated_collision() {
     }
 
     let mantle = MantleEvolutionModule::default();
-    let fake = FakeModule::default();
+    let fake = FakeModule;
     let modules: Vec<(String, &dyn worldsmith_traits::SimulationModule)> = vec![
         ("worldsmith.evolution.mantle".to_string(), &mantle),
         ("fake.module".to_string(), &fake),

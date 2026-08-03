@@ -1,7 +1,6 @@
 //! Create a basic planet and initialize it in the engine.
 
 use worldsmith_engine::EngineBuilder;
-use worldsmith_evolution::EvolutionPlugin;
 use worldsmith_math::Vector3;
 use worldsmith_models::{
     BodyReference, MeasuredValue, OrbitalProperties, PhysicalProperties, Planet, PlanetId,

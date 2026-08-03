@@ -1,7 +1,6 @@
 //! Inspect a planet's state after evolution.
 
 use worldsmith_engine::EngineBuilder;
-use worldsmith_evolution::EvolutionPlugin;
 use worldsmith_models::PlanetId;
 
 fn main() -> worldsmith_engine::EngineResult<()> {

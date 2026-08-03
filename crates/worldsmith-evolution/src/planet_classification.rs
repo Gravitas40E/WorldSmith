@@ -7,7 +7,6 @@
 //! PlanetClassificationModule interprets simulation results and never
 //! influences planetary evolution.
 
-
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
     AtmosphereState, BiosphereCategory, BiosphereState, CarbonCycleState, ClimateState,
@@ -37,9 +36,7 @@ pub struct PlanetClassificationModule {
 
 impl PlanetClassificationModule {
     pub fn new(_config: PlanetClassificationConfig) -> Self {
-        Self {
-            initialized: false,
-        }
+        Self { initialized: false }
     }
 
     fn classify_primary(

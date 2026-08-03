@@ -287,7 +287,7 @@ fn composition_fractions_must_sum_to_one() {
         .with_seed(7)
         .build()
         .expect("engine builds");
-    let mut state = engine.state_mut();
+    let state = engine.state_mut();
     state.planets.insert(PlanetId(1), planet);
 
     let err = validate_state(state).unwrap_err();

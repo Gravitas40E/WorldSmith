@@ -8,7 +8,7 @@
 ## Build
 
 ```bash
-git clone https://github.com/worldsmith/worldsmith.git
+git clone https://github.com/Gravitas40E/WorldSmith.git
 cd worldsmith
 cargo build --workspace
 ```

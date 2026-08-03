@@ -132,16 +132,14 @@ impl CarbonCycleModule {
         let volcanic_flux =
             self.config.volcanic_outgassing_efficiency.max(0.0) * volcanism.volcanic_flux;
 
-        let land_area_factor = (0.01 + plate_tectonics.plate_velocity * 0.1)
-            .clamp(0.0, 1.0);
+        let land_area_factor = (0.01 + plate_tectonics.plate_velocity * 0.1).clamp(0.0, 1.0);
         let weathering = self.config.weathering_efficiency.max(0.0)
             * (0.5 + climate.planetary_albedo)
             * land_area_factor
             * (1.0 + climate.equilibrium_temperature_k / 1000.0);
 
         let ocean_surface_area = if hydro.total_water_mass_kg > 0.0 {
-            (hydro.ocean_mass_kg / hydro.total_water_mass_kg)
-                .clamp(0.0, 1.0)
+            (hydro.ocean_mass_kg / hydro.total_water_mass_kg).clamp(0.0, 1.0)
         } else {
             0.0
         };

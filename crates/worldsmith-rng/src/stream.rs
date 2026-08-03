@@ -252,7 +252,7 @@ mod tests {
         let mut rng = RngStream::new(123);
         for _ in 0..200 {
             let v = rng.next_f64_range(2.0, 5.0);
-            assert!(v >= 2.0 && v < 5.0);
+            assert!((2.0..5.0).contains(&v));
         }
     }
 }

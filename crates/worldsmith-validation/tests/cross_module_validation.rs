@@ -82,7 +82,7 @@ fn validate_no_cross_module_writes_detects_simulated_unauthorized_write() {
     }
 
     let mantle = MantleEvolutionModule::default();
-    let bad = BadModule::default();
+    let bad = BadModule;
 
     let mut modules =
         std::collections::BTreeMap::<String, &dyn worldsmith_traits::SimulationModule>::new();

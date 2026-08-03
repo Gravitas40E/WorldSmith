@@ -43,9 +43,7 @@
 //!   `magnetic_field`, `habitability`
 
 use serde::{Deserialize, Serialize};
-use worldsmith_models::{
-    ClimateState, ClimateType, Planet, PlanetId,
-};
+use worldsmith_models::{ClimateState, ClimateType, Planet, PlanetId};
 use worldsmith_state::{FieldKey, SimulationEvent};
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};
 
@@ -128,15 +126,9 @@ impl ClimateModule {
         luminosity: f64,
         semi_major_axis: f64,
     ) -> ContractResult<ClimateState> {
-        let atmosphere = planet
-            .atmosphere_state
-            .clone()
-            .unwrap_or_default();
+        let atmosphere = planet.atmosphere_state.clone().unwrap_or_default();
 
-        let hydro = planet
-            .hydrology_state
-            .clone()
-            .unwrap_or_default();
+        let hydro = planet.hydrology_state.clone().unwrap_or_default();
 
         let total_water = hydro.total_water_mass_kg;
         let ocean_mass = hydro.ocean_mass_kg;

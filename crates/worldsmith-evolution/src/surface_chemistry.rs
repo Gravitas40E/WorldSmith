@@ -46,8 +46,8 @@
 
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
-    CarbonCycleState, ClimateState, CryosphereState,
-    HydrologyState, Planet, PlanetId, SurfaceChemistryState,
+    CarbonCycleState, ClimateState, CryosphereState, HydrologyState, Planet, PlanetId,
+    SurfaceChemistryState,
 };
 use worldsmith_state::{FieldKey, SimulationEvent};
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};
@@ -340,9 +340,10 @@ mod tests {
     use worldsmith_engine::EngineBuilder;
     use worldsmith_math::Vector3;
     use worldsmith_models::{
-        AtmosphericGas, AtmosphericProperties, AtmosphereState, BiosphereState, CarbonCycleState, CryosphereState, HabitabilityState, PlanetClassificationState,
-        MeasuredValue, OceanProperties, OrbitalProperties, PhysicalProperties, Star, StarId,
-        SurfaceChemistryState, SystemId,
+        AtmosphereState, AtmosphericGas, AtmosphericProperties, BiosphereState, CarbonCycleState,
+        CryosphereState, HabitabilityState, MeasuredValue, OceanProperties, OrbitalProperties,
+        PhysicalProperties, PlanetClassificationState, Star, StarId, SurfaceChemistryState,
+        SystemId,
     };
 
     fn earth_like_planet(planet_id: PlanetId, star_id: StarId) -> worldsmith_models::Planet {

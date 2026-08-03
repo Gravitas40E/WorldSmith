@@ -33,24 +33,11 @@
 //! - evolutionary dynamics
 //! - species-level models
 //!
-//! ## Ownership
-//!
-//! - **Reads**: `ClimateState`, `HydrologyState`, `CarbonCycleState`,
-//!   `AtmosphereState`, `Planet` properties
-//! - **Writes**: `total_biomass_kg`, `terrestrial_biomass_kg`,
-//!   `marine_biomass_kg`, `dead_organic_carbon_kg`,
-//!   `productivity_rate_kg_per_s`, `respiration_rate_kg_per_s`,
-//!   `habitability_factor`, `vegetation_fraction`,
-//!   `ocean_productivity_factor`
-//! - **Never modifies**: `AtmosphereState`, `HydrologyState`,
-//!   `ClimateState`, `CarbonCycleState`, `InteriorState`,
-//!   `VolcanismState`, `PlateTectonicsState`, `climate`, `ocean`,
-//!   `magnetic_field`, `habitability`
 
 use serde::{Deserialize, Serialize};
 use worldsmith_models::{
-    AtmosphereState, BiosphereState, CarbonCycleState, ClimateState,
-    HydrologyState, Planet, PlanetId,
+    AtmosphereState, BiosphereState, CarbonCycleState, ClimateState, HydrologyState, Planet,
+    PlanetId,
 };
 use worldsmith_state::{FieldKey, SimulationEvent};
 use worldsmith_traits::{ContractResult, ModuleContext, SimulationModule, StateWriter};
@@ -350,8 +337,9 @@ mod tests {
     use worldsmith_engine::EngineBuilder;
     use worldsmith_math::Vector3;
     use worldsmith_models::{
-        AtmosphericGas, AtmosphericProperties, MeasuredValue, OceanProperties, OrbitalProperties,
-        PhysicalProperties, PlanetClassificationState, Star, StarId, SystemId,
+        AtmosphericGas, AtmosphericProperties, CryosphereState, HabitabilityState, MeasuredValue,
+        OceanProperties, OrbitalProperties, PhysicalProperties, PlanetClassificationState, Star,
+        StarId, SurfaceChemistryState, SystemId,
     };
 
     fn earth_like_planet(planet_id: PlanetId, star_id: StarId) -> worldsmith_models::Planet {
