@@ -330,3 +330,100 @@ input, select {
   color: var(--text-muted);
   font-size: 12px;
 }
+
+/* Status */
+.status-block {
+  margin-bottom: 8px;
+}
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-dot.idle {
+  background: var(--text-muted);
+}
+.status-dot.active {
+  background: var(--warning);
+  box-shadow: 0 0 6px var(--warning);
+}
+.status-dot.success {
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
+}
+.status-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.status-metrics {
+  margin-top: 8px;
+}
+
+/* Pipeline */
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0 12px;
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+}
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.pipeline-step.active {
+  color: var(--text-secondary);
+}
+.pipeline-step.done {
+  color: var(--success);
+}
+.pipeline-marker {
+  width: 14px;
+  text-align: center;
+}
+.pipeline-text {
+  font-family: var(--font-mono);
+}
+
+/* Module inspector */
+.module-details {
+  border-top: 1px solid var(--border-color);
+  padding-top: 4px;
+  margin-top: 4px;
+}
+.module-summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.module-summary::after {
+  content: '▸';
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.module-details[open] .module-summary::after {
+  content: '▾';
+}
+.module-rows {
+  padding-left: 8px;
+}
