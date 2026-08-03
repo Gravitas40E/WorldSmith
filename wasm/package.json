@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "./pkg/worldsmith_web.js",
-  "types": "./src/lib.ts",
+  "types": "./pkg/worldsmith_web.d.ts",
   "scripts": {
     "build": "cd ../crates/worldsmith-web && wasm-pack build --out-dir ../wasm/pkg",
     "preview": "cd ../crates/worldsmith-web && wasm-pack build --dev --out-dir ../wasm/pkg"

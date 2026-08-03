@@ -1,0 +1,8 @@
+{
+  "name": "worldsmith-wasm",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./worldsmith_web.js",
+  "types": "./worldsmith_web.d.ts",
+  "sideEffects": ["./snippets/*"]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "worldsmith-wasm",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./pkg/worldsmith_web.js",
+  "types": "./pkg/worldsmith_web.d.ts"
+}

@@ -26,7 +26,8 @@ jobs:
       - name: Install wasm-pack
         run: cargo install wasm-pack --force
       - name: Build WASM
-        run: wasm-pack build crates/worldsmith-web --out-dir wasm/pkg --target web
+        working-directory: crates/worldsmith-web
+        run: wasm-pack build --target web
       - uses: actions/setup-node@v4
         with:
           node-version: 20

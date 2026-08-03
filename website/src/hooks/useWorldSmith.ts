@@ -1,4 +1,4 @@
-import { Explorer } from 'worldsmith-wasm/worldsmith_web';
+import { Explorer } from '../lib/wasm/worldsmith_web';
 
 export interface PlanetParams {
   seed: number;
