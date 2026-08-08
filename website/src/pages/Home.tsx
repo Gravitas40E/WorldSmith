@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/global.css';
+import './../styles/global.css';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -9,15 +9,13 @@ const Home: React.FC = () => {
     <div className="home">
       <div className="home-content">
         <div className="home-logo">
-          <div className="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              <path d="M2 12h20" />
-            </svg>
-          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="32" height="32">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            <path d="M2 12h20" />
+          </svg>
         </div>
-        <h1 className="home-title">WorldSmith Explorer</h1>
+        <h1 className="home-title">WorldSmith</h1>
         <p className="home-subtitle">
           Realistic planetary simulation and visualization engine
         </p>
@@ -28,7 +26,7 @@ const Home: React.FC = () => {
         </div>
         <button className="launch-btn" onClick={() => navigate('/explorer')}>
           Launch Explorer
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </button>

@@ -3,21 +3,20 @@ import { WorldSmithClient, PlanetParams } from '../hooks/useWorldSmith';
 import PlanetViewer from '../components/PlanetViewer';
 import Sidebar from '../components/Sidebar';
 import InfoPanel from '../components/InfoPanel';
-import '../styles/global.css';
+import './../styles/global.css';
 
 const PIPELINE_STEPS = [
   'Initializing...',
-  '✓ Core',
-  '✓ Mantle',
-  '✓ Volcanism',
-  '✓ Plate Tectonics',
-  '✓ Atmosphere',
-  '✓ Hydrology',
-  '✓ Climate',
-  '✓ Carbon Cycle',
-  '✓ Biosphere',
-  '✓ Habitability',
-  'Done',
+  'Core',
+  'Mantle',
+  'Volcanism',
+  'Plate Tectonics',
+  'Atmosphere',
+  'Hydrology',
+  'Climate',
+  'Carbon Cycle',
+  'Biosphere',
+  'Habitability',
 ];
 
 const Explorer: React.FC = () => {
@@ -30,12 +29,13 @@ const Explorer: React.FC = () => {
   const [speed, setSpeed] = React.useState(1);
   const [status, setStatus] = React.useState<'idle' | 'generating' | 'ready'>('idle');
   const [pipeline, setPipeline] = React.useState<string[]>([]);
+  const sidebarRef = React.useRef<HTMLElement>(null);
 
   const runPipeline = React.useCallback(async () => {
     setStatus('generating');
     setPipeline([PIPELINE_STEPS[0]]);
     for (let i = 1; i < PIPELINE_STEPS.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 120));
+      await new Promise(resolve => setTimeout(resolve, 80));
       setPipeline(prev => [...prev, PIPELINE_STEPS[i]]);
     }
     setStatus('ready');
@@ -102,9 +102,16 @@ const Explorer: React.FC = () => {
     }
   }, [client]);
 
+  const handleEmptyGenerate = React.useCallback(() => {
+    sidebarRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const seedInput = document.getElementById('seed') as HTMLInputElement | null;
+    seedInput?.focus();
+  }, []);
+
   return (
     <div className="explorer">
       <Sidebar
+        ref={sidebarRef as any}
         onGenerate={handleGenerate}
         onTick={handleTick}
         onExport={handleExport}
@@ -116,6 +123,14 @@ const Explorer: React.FC = () => {
       />
       <main className="explorer-main">
         <PlanetViewer planet={planet ?? null} />
+        {!planet && (
+          <div className="empty-planet-ui">
+            <div className="empty-planet-ring" />
+            <div className="empty-planet-title">No World Loaded</div>
+            <div className="empty-planet-desc">Generate a planet to begin exploring its physical systems.</div>
+            <button className="empty-planet-action secondary-btn" onClick={handleEmptyGenerate}>Open Controls</button>
+          </div>
+        )}
         {error && <div className="error-toast">{error}</div>}
       </main>
       <InfoPanel planet={planet ?? undefined} snapshot={snapshot ?? undefined} status={status} pipeline={pipeline} />

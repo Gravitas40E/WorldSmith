@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Grid, Environment } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { BufferAttribute } from 'three';
 
 interface Props {
   planet?: {
@@ -15,11 +16,56 @@ interface Props {
   } | null;
 }
 
+function Stars() {
+  const points = useRef<any>(null);
+  useEffect(() => {
+    const positions = new Float32Array(1200 * 3);
+    for (let i = 0; i < 1200; i++) {
+      const r = 18 + Math.random() * 24;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = r * Math.cos(phi);
+    }
+    if (points.current) {
+      points.current.geometry.setAttribute('position', new BufferAttribute(positions, 3));
+    }
+  }, []);
+  return (
+    <points ref={points}>
+      <bufferGeometry />
+      <pointsMaterial color="#8a8f98" size={0.018} sizeAttenuation depthWrite={false} />
+    </points>
+  );
+}
+
+function PlanetMaterial({ color, emissive }: { color: string; emissive?: string }) {
+  return (
+    <meshStandardMaterial
+      color={color}
+      emissive={emissive ?? '#000000'}
+      emissiveIntensity={0.08}
+      roughness={0.65}
+      metalness={0.05}
+    />
+  );
+}
+
 function BiomeSphere({ color, emissive }: { color: string; emissive?: string }) {
   return (
     <mesh>
       <sphereGeometry args={[1, 64, 64]} />
-      <meshStandardMaterial color={color} emissive={emissive ?? '#000000'} emissiveIntensity={0.15} roughness={0.6} metalness={0.1} />
+      <PlanetMaterial color={color} emissive={emissive} />
+    </mesh>
+  );
+}
+
+function Atmosphere({ color }: { color: string }) {
+  return (
+    <mesh scale={[1.04, 1.04, 1.04]}>
+      <sphereGeometry args={[1, 64, 64]} />
+      <meshBasicMaterial color={color} transparent opacity={0.08} depthWrite={false} />
     </mesh>
   );
 }
@@ -27,19 +73,26 @@ function BiomeSphere({ color, emissive }: { color: string; emissive?: string }) 
 function Scene({ color, emissive }: { color: string; emissive?: string }) {
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={50} />
-      <OrbitControls enableDamping dampingFactor={0.05} />
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 3, 5]} intensity={1.2} />
+      <PerspectiveCamera makeDefault position={[0, 0.4, 3.2]} fov={45} />
+      <OrbitControls
+        enableDamping
+        dampingFactor={0.08}
+        minDistance={1.6}
+        maxDistance={12}
+        autoRotate
+        autoRotateSpeed={0.4}
+      />
+      <ambientLight intensity={0.35} />
+      <directionalLight position={[5, 3, 5]} intensity={1.15} color="#eef2ff" />
       <BiomeSphere color={color} emissive={emissive} />
-      <Grid args={[20, 20]} cellSize={0.5} cellThickness={0.5} cellColor="#1a1e2e" sectionSize={2} sectionThickness={1} sectionColor="#2a3045" fadeDistance={30} />
-      <Environment preset="city" />
+      <Atmosphere color={color} />
+      <Stars />
     </>
   );
 }
 
 const PlanetViewer: React.FC<Props> = ({ planet }) => {
-  let color = '#0f172a';
+  let color = '#27272a';
   let emissive: string | undefined;
 
   if (planet) {
@@ -49,8 +102,8 @@ const PlanetViewer: React.FC<Props> = ({ planet }) => {
     const classification = (planet.primary_classification ?? '').toLowerCase();
 
     if (classification.includes('icy') || ice > 0.4 || (temp !== undefined && temp < 130)) {
-      color = '#e2e8f0';
-      emissive = '#1e293b';
+      color = '#e4e4e7';
+      emissive = '#18181b';
     } else if (classification.includes('volcanic') || (temp !== undefined && temp > 900)) {
       color = '#b45309';
       emissive = '#7c2d12';
@@ -67,7 +120,7 @@ const PlanetViewer: React.FC<Props> = ({ planet }) => {
       color = '#22c55e';
       emissive = '#14532d';
     } else {
-      color = '#64748b';
+      color = '#52525b';
     }
   }
 

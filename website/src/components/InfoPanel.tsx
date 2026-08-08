@@ -56,7 +56,7 @@ const StatusIndicator: React.FC<{ status?: 'idle' | 'generating' | 'ready'; tick
     return (
       <div className="status-block">
         <div className="status-row">
-          <span className="status-dot idle" />
+          <span className="status-dot idle" aria-hidden="true" />
           <span className="status-label">Ready</span>
         </div>
         <p className="empty-state">Awaiting simulation.</p>
@@ -67,7 +67,7 @@ const StatusIndicator: React.FC<{ status?: 'idle' | 'generating' | 'ready'; tick
     return (
       <div className="status-block">
         <div className="status-row">
-          <span className="status-dot active" />
+          <span className="status-dot active" aria-hidden="true" />
           <span className="status-label">Generating...</span>
         </div>
       </div>
@@ -76,7 +76,7 @@ const StatusIndicator: React.FC<{ status?: 'idle' | 'generating' | 'ready'; tick
   return (
     <div className="status-block">
       <div className="status-row">
-        <span className="status-dot success" />
+        <span className="status-dot success" aria-hidden="true" />
         <span className="status-label">Simulation Complete</span>
       </div>
       <div className="status-metrics">
@@ -131,7 +131,7 @@ const ModuleInspector: React.FC<{ planet?: PlanetState }> = ({ planet }) => {
 
   return (
     <div className="info-block">
-      <h3>Simulation Modules</h3>
+      <h3>Simulation Systems</h3>
       {modules.map(module => (
         <details key={module.title} className="module-details">
           <summary className="module-summary">{module.title}</summary>
@@ -147,11 +147,11 @@ const ModuleInspector: React.FC<{ planet?: PlanetState }> = ({ planet }) => {
 };
 
 const Pipeline: React.FC<{ steps: string[] }> = ({ steps }) => (
-  <div className="pipeline">
+  <div className="pipeline" aria-live="polite">
     {steps.map((step, idx) => (
-      <div key={idx} className={`pipeline-step ${step.startsWith('✓') ? 'done' : step === 'Done' ? 'done' : 'active'}`}>
-        <span className="pipeline-marker">{step.startsWith('✓') || step === 'Done' ? '✓' : '•'}</span>
-        <span className="pipeline-text">{step.replace('✓ ', '')}</span>
+      <div key={idx} className={`pipeline-step ${step === 'Initializing...' ? 'active' : 'done'}`}>
+        <span className="pipeline-marker">{step === 'Initializing...' ? '•' : '✓'}</span>
+        <span className="pipeline-text">{step}</span>
       </div>
     ))}
   </div>
